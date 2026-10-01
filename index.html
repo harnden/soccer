@@ -55,12 +55,15 @@
   a.soon:hover .link { fill: #eef2f5; }
 
   @media (prefers-reduced-motion: reduce) { a .link { transition: none; } }
+  .home { position: fixed; top: calc(14px + env(safe-area-inset-top, 0px)); left: 16px; color: #5b6772; text-decoration: none; font-family: "Barlow Condensed", "Arial Narrow", sans-serif; font-weight: 700; font-size: 18px; letter-spacing: .02em; }
+  .home:hover { color: #1c2630; }
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
+<a class="home" href="/hq/">&larr; HQ</a>
 
   <svg viewBox="-290 -290 580 580" role="img" aria-label="Soccer hub">
     <defs>
