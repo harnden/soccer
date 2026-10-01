@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Soccer</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { height: 100%; }
+
+  body {
+    background: #f6f8fa;
+    color: #1c2630;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    /* halfway line */
+    background-image: linear-gradient(#c3ccd6, #c3ccd6);
+    background-size: 100% 1.5px;
+    background-repeat: no-repeat;
+    background-position: 0 50%;
+  }
+
+  svg { width: min(88vw, 560px); height: auto; display: block; }
+
+  .base   { fill: url(#shade); stroke: #1c2630; stroke-width: 5; }
+  .dark   { fill: url(#darkshade); stroke: #1c2630; stroke-width: 3; }
+  .hex    { fill: #eef2f5; stroke: #2a343d; stroke-width: 3; }
+  .seam   { stroke: #2a343d; stroke-width: 3; }
+  .center { fill: url(#darkshade); stroke: #1c2630; stroke-width: 3; }
+  .gloss  { fill: url(#gloss); pointer-events: none; }
+
+  text {
+    font-weight: 700;
+    font-size: 38px;
+    fill: #1c2630;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
+  }
+
+  a .link { transition: fill 0.18s ease; cursor: pointer; }
+  a:hover .link, a:focus-visible .link { fill: #dfe9f6; }
+  a:focus-visible { outline: none; }
+  a:focus-visible .link { stroke: #2f6fde; stroke-width: 5; }
+
+
+  a.soon text { fill: #9aa3ad; }
+  a.soon .link { cursor: default; }
+  a.soon:hover .link { fill: #eef2f5; }
+
+  @media (prefers-reduced-motion: reduce) { a .link { transition: none; } }
+</style>
+</head>
+<body>
+
+  <svg viewBox="-290 -290 580 580" role="img" aria-label="Soccer hub">
+    <defs>
+      <radialGradient id="shade" cx="35%" cy="30%" r="80%">
+        <stop offset="0" stop-color="#f4f6f8"/>
+        <stop offset="0.75" stop-color="#dde2e8"/>
+        <stop offset="1" stop-color="#b9c1cb"/>
+      </radialGradient>
+      <radialGradient id="darkshade" cx="30%" cy="25%" r="90%">
+        <stop offset="0" stop-color="#59616a"/>
+        <stop offset="1" stop-color="#1c2630"/>
+      </radialGradient>
+      <radialGradient id="gloss" cx="50%" cy="50%" r="50%">
+        <stop offset="0.7" stop-color="#000" stop-opacity="0"/>
+        <stop offset="1" stop-color="#000" stop-opacity="0.12"/>
+      </radialGradient>
+      <clipPath id="ball"><circle r="276"/></clipPath>
+    </defs>
+
+    <circle class="base" r="276"/>
+
+    <g clip-path="url(#ball)">
+      <polygon class="dark" points="0.0,180.0 81.0,249.2 82.3,329.9 -82.3,329.9 -81.0,249.2"/>
+      <polygon class="dark" points="-171.2,55.6 -212.0,154.0 -288.3,180.2 -339.2,23.7 -262.0,0.0"/>
+      <polygon class="dark" points="-105.8,-145.6 -212.0,-154.0 -260.5,-218.5 -127.4,-315.2 -81.0,-249.2"/>
+      <polygon class="dark" points="105.8,-145.6 81.0,-249.2 127.4,-315.2 260.5,-218.5 212.0,-154.0"/>
+      <polygon class="dark" points="171.2,55.6 262.0,-0.0 339.2,23.7 288.3,180.2 212.0,154.0"/>
+      <polygon class="hex" points="90.4,29.4 171.2,55.6 212.0,154.0 81.0,249.2 0.0,180.0 0.0,95.0"/>
+      <polygon class="center" points="0.0,95.0 -90.4,29.4 -55.8,-76.9 55.8,-76.9 90.4,29.4"/>
+
+      <!-- Links: swap hrefs for the real filenames -->
+      <a href="gu12-white.html" aria-label="GU12 White">
+        <polygon class="hex link" points="-90.4,29.4 -171.2,55.6 -262.0,0.0 -212.0,-154.0 -105.8,-145.6 -55.8,-76.9"/>
+        <text x="-149.5" y="-48.6"><tspan x="-149.5" dy="-0.1em">GU12</tspan><tspan x="-149.5" dy="1.05em">White</tspan></text>
+      </a>
+      <a href="match-day.html" aria-label="Match Day">
+        <polygon class="hex link" points="55.8,-76.9 105.8,-145.6 212.0,-154.0 262.0,-0.0 171.2,55.6 90.4,29.4"/>
+        <text x="149.5" y="-48.6"><tspan x="149.5" dy="-0.1em">Match</tspan><tspan x="149.5" dy="1.05em">Day</tspan></text>
+      </a>
+
+      <!-- Future panel: to activate, add href="..." and remove class "soon" -->
+      <a class="soon" aria-disabled="true" aria-label="GU11 Dortmund (coming soon)">
+        <polygon class="hex link" points="-55.8,-76.9 -105.8,-145.6 -81.0,-249.2 81.0,-249.2 105.8,-145.6 55.8,-76.9"/>
+        <text x="0.0" y="-157.2" style="font-size:28px"><tspan x="0.0" dy="-0.1em">GU11</tspan><tspan x="0.0" dy="1.05em">Dortmund</tspan></text>
+      </a>
+
+      <!-- Future panel: to activate, add href="..." and remove class "soon" -->
+      <a class="soon" aria-disabled="true" aria-label="Pre-ECNL (coming soon)">
+        <polygon class="hex link" points="0.0,95.0 0.0,180.0 -81.0,249.2 -212.0,154.0 -171.2,55.6 -90.4,29.4"/>
+        <text x="-92.4" y="127.2" style="font-size:32px">Pre-ECNL</text>
+      </a>
+
+      <circle class="gloss" r="276"/>
+    </g>
+    <circle r="276" fill="none" stroke="#1c2630" stroke-width="6"/>
+  </svg>
+
+
+</body>
+</html>

@@ -4,664 +4,86 @@
 <meta charset="utf-8">
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#f7f9fb">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Match day">
-<title>Match day</title>
+<title>Soccer tools</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#f7f9fb;--ink:#1d2a33;--muted:#5d6b75;--line:#dbe2e8;--card:#fff;
-  --accent:#2c5f86;--tint:rgba(44,95,134,.10);--on-accent:#fff;
-  --ok:#1f6a36;--warn:#8f2626;--amber:#f0b429;--amber-text:#9a6b00;
-  --display:"Barlow Condensed","Arial Narrow",sans-serif;
+:root{--bg:#f7f9fb;--ink:#1d2a33;--muted:#5d6b75;--line:#c9d3db;--accent:#2c5f86;
   box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root{
-  --bg:#141a1f;--ink:#e7edf2;--muted:#9aa8b3;--line:#2b353d;--card:#1b232a;
-  --accent:#5b8db5;--tint:rgba(91,141,181,.16);--ok:#9fe0b0;--warn:#f2aaaa;--amber-text:#f0b429}}
+@media (prefers-color-scheme:dark){:root{--bg:#141a1f;--ink:#e7edf2;--muted:#9aa8b3;--line:#35414a;--accent:#5b8db5}}
 *,*::before,*::after{box-sizing:inherit}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 "Source Sans 3",system-ui,-apple-system,sans-serif}
-.wrap{max-width:520px;margin:0 auto;padding:0 14px 40px}
-a.hub{display:block;padding:10px 0 0;color:var(--muted);font-size:.9rem;text-decoration:none}
-a.hub::before{content:"← "}
-h1,h2{font-family:var(--display);font-weight:700;line-height:1.05;margin:0}
-h1{font-size:2rem;margin:6px 0 2px}
-h2{font-size:1.45rem;margin:0 0 10px}
-.sub{color:var(--muted);margin:0 0 14px;font-size:.95rem}
-button{font:inherit;color:inherit}
-button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-
-/* steps */
-nav.steps{position:sticky;top:0;z-index:20;display:flex;background:var(--bg);border-bottom:1px solid var(--line);margin:8px -14px 16px;padding:0 6px}
-nav.steps button{flex:1;background:none;border:0;border-bottom:3px solid transparent;padding:12px 2px 10px;font-weight:600;font-size:.9rem;color:var(--muted);cursor:pointer}
-nav.steps button .n{display:inline-block;width:1.35em;height:1.35em;line-height:1.35em;border-radius:50%;background:var(--line);color:var(--ink);font-size:.78rem;margin-right:5px;text-align:center}
-nav.steps button.on{color:var(--ink);border-bottom-color:var(--accent)}
-nav.steps button.on .n{background:var(--accent);color:var(--on-accent)}
-nav.steps button:disabled{opacity:.45;cursor:default}
-
-.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
-label.l{display:block;font-weight:600;font-size:.9rem;margin-bottom:6px}
-textarea,input[type=text],select{width:100%;padding:11px 12px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-size:16px}
-textarea{min-height:200px;resize:vertical;line-height:1.5}
-.hint{color:var(--muted);font-size:.85rem;margin-top:6px}
-.btn{display:block;width:100%;padding:13px;border-radius:10px;border:0;background:var(--accent);color:var(--on-accent);font-weight:700;font-size:1.05rem;cursor:pointer;margin-top:12px}
-.btn:disabled{background:var(--line);color:var(--muted);cursor:default}
-.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--muted);font-weight:600;font-size:.95rem}
-.btn.danger{background:transparent;border:1px solid var(--warn);color:var(--warn);font-weight:600;font-size:.95rem}
-.btn.danger.armed{background:var(--warn);color:var(--bg)}
-.row{display:flex;gap:10px;align-items:center}
-.row>*{flex:1}
-
-/* teams */
-.teams{display:grid;gap:10px}
-.team{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--c);border-radius:12px;padding:10px 12px}
-.team input.tname{border:0;border-bottom:1px dashed var(--line);border-radius:0;background:transparent;padding:4px 0;font:700 1.35rem var(--display);width:100%}
-.team ul{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
-.team li{background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:.92rem;cursor:pointer}
-.team li:hover{border-color:var(--accent)}
-.team .cnt{color:var(--muted);font-size:.85rem}
-
-/* formats */
-.formats{display:grid;gap:10px}
-.fmt{display:block;width:100%;text-align:left;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:14px;cursor:pointer}
-.fmt b{display:block;font:700 1.4rem var(--display)}
-.fmt span{color:var(--muted);font-size:.93rem}
-.fmt.on{border-color:var(--accent);background:var(--tint)}
-.fmt:disabled{cursor:default;opacity:.55}
-.soon{display:inline-block;margin-left:6px;font:600 .75rem "Source Sans 3",sans-serif;color:var(--amber-text);border:1px solid currentColor;border-radius:999px;padding:0 7px;vertical-align:middle}
-
-/* matches */
-.tabs{display:flex;gap:6px;margin-bottom:12px}
-.tabs button{flex:1;padding:8px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-weight:600;cursor:pointer}
-.tabs button.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
-.rlabel{font:700 1.05rem var(--display);color:var(--muted);margin:14px 0 6px}
-.match{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;width:100%;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:6px;cursor:pointer;text-align:left}
-.match:disabled{cursor:default}
-.match .h{text-align:right}
-.match .t{font-weight:600;overflow:hidden;text-overflow:ellipsis}
-.match .t.tbd{color:var(--muted);font-style:italic;font-weight:400}
-.match .t.win{color:var(--ok)}
-.match .s{font:700 1.35rem var(--display);font-variant-numeric:tabular-nums;min-width:3.2em;text-align:center}
-.match.live{border-color:var(--amber);box-shadow:inset 3px 0 0 var(--amber)}
-.match.done .s{color:var(--muted)}
-.dot{display:inline-block;width:.6em;height:.6em;border-radius:50%;background:var(--c);margin:0 5px;vertical-align:middle}
-table.std{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
-table.std th,table.std td{padding:8px 6px;text-align:center;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
-table.std th{font-size:.8rem;color:var(--muted);font-weight:600}
-table.std td:nth-child(2),table.std th:nth-child(2){text-align:left}
-table.std tr:last-child td{border-bottom:0}
-.champ{text-align:center;background:var(--card);border:2px solid var(--amber);border-radius:12px;padding:14px;margin-bottom:12px}
-.champ b{display:block;font:800 1.8rem var(--display);color:var(--amber-text)}
-
-/* live board */
-.live-head{text-align:center;color:var(--muted);font-weight:600;margin:4px 0 8px}
-.scores{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.sbtn{border:0;border-radius:16px;padding:14px 8px 12px;background:var(--c);color:#1d2a33;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;touch-action:manipulation}
-.sbtn .nm{font:700 1.15rem var(--display);text-align:center;line-height:1.1}
-.sbtn .num{font:800 3.8rem/1 var(--display);font-variant-numeric:tabular-nums}
-.sbtn .tap{font-size:.78rem;opacity:.8}
-.sbtn.armed{outline:3px solid var(--amber);outline-offset:3px;animation:pulse .9s ease-in-out infinite}
-.sbtn.armed .tap{opacity:1;font-weight:700}
-.sbtn:disabled{cursor:default;opacity:.8}
-@keyframes pulse{50%{transform:scale(1.03)}}
-@media (prefers-reduced-motion:reduce){.sbtn.armed{animation:none}}
-.log .e{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--line)}
-.log .e:last-child{border-bottom:0}
-.log .who{font-weight:600}
-.log .meta{color:var(--muted);font-size:.85rem}
-.empty{color:var(--muted);text-align:center;padding:14px 0}
-.pick{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.leader{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line)}
-.leader:last-child{border-bottom:0}
-.leader b{font:700 1.2rem var(--display)}
-.foot{margin-top:24px;padding-top:12px;border-top:1px solid var(--line)}
-.foot .row button{margin-top:0}
-.small{font-size:.85rem;color:var(--muted)}
-.roster{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
-.roster:last-child{border-bottom:0}
-.roster .rn{flex:1;min-width:0}
-.roster .rn b{display:block;font:700 1.2rem var(--display);line-height:1.1}
-.roster .rn span{color:var(--muted);font-size:.85rem}
-.mini{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:7px 10px;font-weight:600;font-size:.88rem;cursor:pointer;white-space:nowrap}
-.mini.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
-.mini.del{color:var(--warn)}
-.mini.del.armed{background:var(--warn);border-color:var(--warn);color:var(--bg)}
-.mini:disabled{opacity:.5;cursor:default}
-.att{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.att button{border:1px solid var(--accent);background:var(--tint);color:var(--ink);border-radius:999px;padding:6px 12px;font-weight:600;font-size:.95rem;cursor:pointer}
-.chip{display:inline-flex;align-items:center;gap:2px;border:1px solid var(--accent);background:var(--tint);border-radius:999px;padding:3px 4px 3px 12px;font-weight:600;font-size:.95rem}
-.chip button{border:0;background:none;color:var(--muted);font-size:1rem;line-height:1;padding:4px 7px;border-radius:50%;cursor:pointer}
-.chip button:hover{color:var(--warn)}
-.rload{flex:1;min-width:0;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 12px;cursor:pointer}
-.rload:hover{border-color:var(--accent)}
-.rload b{display:block;font:700 1.25rem var(--display);line-height:1.1}
-.rload span{color:var(--muted);font-size:.85rem}
-.atthead{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
-.atthead .count{font:700 1.3rem var(--display)}
-.linkbtn{background:none;border:0;color:var(--accent);font-weight:600;font-size:.88rem;cursor:pointer;padding:0}
-.incoming{border:2px solid var(--accent);background:var(--tint)}
-[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 "Source Sans 3",system-ui,-apple-system,sans-serif;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100%;overflow-x:hidden}
+.pitch{position:relative;width:100%;display:flex;justify-content:center;padding:28px 0}
+.pitch::before{content:"";position:absolute;left:0;right:0;top:50%;border-top:2px solid var(--line)}
+svg.ball{position:relative;width:min(90vw,78vh,600px);height:auto;overflow:visible}
+.ballbg{fill:#fff;stroke:#1d2a33;stroke-width:.012}
+.hex{fill:hsl(210 20% calc(var(--s) * 100%));stroke:#1d2a33;stroke-width:.012;stroke-linejoin:round}
+.pent{fill:hsl(205 28% calc(var(--s) * 14%));stroke:#1d2a33;stroke-width:.012;stroke-linejoin:round}
+.labels text{fill:#1d2a33;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.tool .hex{transition:fill .15s}
+.tool .hex{cursor:pointer}
+.tool:hover .hex,.tool:focus-visible .hex{fill:#d3e3f1}
+.tool:focus{outline:none}
+.tool:focus-visible .hex{stroke:#2c5f86;stroke-width:.03}
+.gloss{pointer-events:none}
+@media (prefers-reduced-motion:no-preference){
+  .spin{animation:roll .9s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes roll{from{transform:rotate(-80deg) scale(.85);opacity:0}}
+}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.note{max-width:34rem;margin:0 20px 28px;text-align:center;color:var(--muted);font-size:.88rem}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <a class="hub" href="../">Soccer tools</a>
-  <h1>Match day</h1>
-  <nav class="steps" id="steps">
-    <button data-step="players"><span class="n">1</span>Players</button>
-    <button data-step="teams"><span class="n">2</span>Teams</button>
-    <button data-step="format"><span class="n">3</span>Format</button>
-    <button data-step="play"><span class="n">4</span>Play</button>
-  </nav>
-
-  <!-- 1 PLAYERS -->
-  <section id="s-players">
-    <div class="panel incoming" id="incoming" hidden></div>
-    <div class="panel" id="rosterPanel">
-      <label class="l">Load a roster</label>
-      <div id="rosterList"></div>
-    </div>
-    <div class="panel">
-      <div class="atthead"><label class="l" style="margin:0">Today's players</label><span class="count" id="nameCount"></span></div>
-      <div class="hint" id="todayHint" style="margin-top:2px">Tap ✕ on anyone who isn't here.</div>
-      <div class="att" id="today"></div>
-      <div class="row" style="margin-top:12px">
-        <textarea id="addNames" rows="1" placeholder="Add names" aria-label="Add names" style="min-height:0;height:46px;resize:none"></textarea>
-        <button class="mini primary" id="addBtn" style="flex:0 0 auto;padding:11px 14px">Add</button>
-      </div>
-      <div class="hint">One name, or paste a whole list (one per line). First names only.</div>
-      <div style="margin-top:10px" id="clearWrap"><button class="linkbtn" id="clearToday">Clear list</button></div>
-    </div>
-    <div class="panel" id="savePanel">
-      <label class="l">Save this list as a roster</label>
-      <div class="row">
-        <input type="text" id="rosterName" placeholder="Roster name" aria-label="Roster name">
-        <button class="mini primary" id="saveRoster" style="flex:0 0 auto;padding:11px 12px">Save</button>
-      </div>
-      <div class="hint">Saved on this device. Saving under an existing name updates it.</div>
-    </div>
-    <p class="small">No players, just teams? Leave the list empty and name the teams on the next step.</p>
-    <button class="btn" data-go="teams">Next: make teams</button>
-  </section>
-
-  <!-- 2 TEAMS -->
-  <section id="s-teams" hidden>
-    <div class="panel">
-      <div class="row">
-        <div><label class="l" for="teamCount">Number of teams</label><select id="teamCount"></select></div>
-      </div>
-      <div class="hint" id="sizeNote"></div>
-      <button class="btn" id="shuffle">Shuffle into teams</button>
-      <div class="hint" id="lockNote" hidden>A competition is in progress. Rename teams freely; reshuffling starts the competition over.</div>
-    </div>
-    <div class="teams" id="teamList"></div>
-    <p class="small" id="teamTip" hidden>Tap a team name to rename it. Tap a player to move them to the next team.</p>
-    <button class="btn" data-go="format" id="toFormat" disabled>Next: choose a format</button>
-  </section>
-
-  <!-- 3 FORMAT -->
-  <section id="s-format" hidden>
-    <div class="formats" id="formats">
-      <button class="fmt" data-fmt="single"><b>Single game</b><span>Pick any two teams and keep score.</span></button>
-      <button class="fmt" data-fmt="roundrobin"><b>Round robin</b><span>Everyone plays everyone. Standings by points.</span></button>
-      <button class="fmt" data-fmt="knockout"><b>Knockout</b><span>Win and advance. Byes fill out the bracket.</span></button>
-      <button class="fmt" data-fmt="drills" disabled><b>Drills <span class="soon">Coming soon</span></b><span>Scored drill scenarios.</span></button>
-    </div>
-    <p class="hint" id="fmtNote"></p>
-    <button class="btn" id="startComp" disabled>Start</button>
-  </section>
-
-  <!-- 4 PLAY -->
-  <section id="s-play" hidden>
-    <div id="playList"></div>
-    <div id="liveBoard" hidden></div>
-  </section>
-
-  <div class="foot">
-    <div class="row">
-      <button class="btn ghost" id="exportBtn">Copy backup</button>
-      <button class="btn ghost" id="importBtn">Restore backup</button>
-    </div>
-    <div id="importBox" hidden>
-      <textarea id="importText" style="min-height:90px;margin-top:10px;font-family:ui-monospace,Menlo,monospace;font-size:12px" placeholder="Paste backup here"></textarea>
-      <button class="btn" id="importGo">Restore</button>
-    </div>
-    <textarea id="exportText" hidden readonly style="min-height:90px;margin-top:10px;font-family:ui-monospace,Menlo,monospace;font-size:12px"></textarea>
-    <button class="btn danger" id="resetAll">Clear everything</button>
-    <p class="small">Everything here is saved on this device only.</p>
-  </div>
+<h1 class="sr">Soccer tools</h1>
+<div class="pitch">
+<svg class="ball" viewBox="-1.08 -1.08 2.16 2.16" role="navigation" aria-label="Soccer tools">
+  <defs>
+    <radialGradient id="shade" cx="38%" cy="32%" r="75%">
+      <stop offset="0" stop-color="#fff" stop-opacity=".35"/>
+      <stop offset=".55" stop-color="#fff" stop-opacity="0"/>
+      <stop offset="1" stop-color="#0b1a26" stop-opacity=".28"/>
+    </radialGradient>
+    <clipPath id="disc"><circle r="1"/></clipPath>
+  </defs>
+  <g class="spin">
+    <circle class="ballbg" r="1"/>
+    <g clip-path="url(#disc)">
+<polygon class="hex" points="-0.9971,0.0765 -0.9925,0.1225 -0.9856,0.1690 -0.9764,0.2159 -0.9649,0.2626 -0.9511,0.3090 -0.9350,0.3547 -0.9168,0.3993 -0.8967,0.4426 -0.8749,0.4843 -0.8516,0.5242 -0.8405,0.5418 -0.8294,0.5587 -0.8182,0.5750 -0.8070,0.5905 -0.7958,0.6055 -0.7847,0.6199 -0.7737,0.6336 -0.7627,0.6468 -0.7518,0.6594 -0.7410,0.6715 -0.7553,0.6554 -0.7692,0.6390 -0.7828,0.6223 -0.7961,0.6052 -0.8090,0.5878 -0.8211,0.5698 -0.8317,0.5509 -0.8408,0.5312 -0.8485,0.5108 -0.8547,0.4899 -0.8736,0.4548 -0.8914,0.4186 -0.9078,0.3813 -0.9228,0.3431 -0.9363,0.3042 -0.9483,0.2648 -0.9586,0.2251 -0.9672,0.1853 -0.9741,0.1455 -0.9794,0.1061 -0.9867,0.0855 -0.9924,0.0645 -0.9966,0.0432 -0.9992,0.0216 -1.0000,0.0000 -0.9998,-0.0217 -0.9991,-0.0433 -0.9979,-0.0648 -0.9963,-0.0863 -0.9942,-0.1077 -0.9958,-0.0916 -0.9972,-0.0750 -0.9983,-0.0578 -0.9992,-0.0402 -0.9998,-0.0221 -1.0000,-0.0034 -0.9999,0.0158 -0.9994,0.0355 -0.9984,0.0557" style="--s:0.860"/>
+<polygon class="hex" points="-0.8676,-0.4973 -0.8567,-0.5158 -0.8454,-0.5341 -0.8337,-0.5522 -0.8216,-0.5701 -0.8090,-0.5878 -0.7956,-0.6048 -0.7809,-0.6207 -0.7650,-0.6355 -0.7480,-0.6491 -0.7300,-0.6615 -0.7025,-0.6903 -0.6736,-0.7184 -0.6432,-0.7455 -0.6115,-0.7716 -0.5787,-0.7965 -0.5449,-0.8200 -0.5103,-0.8421 -0.4751,-0.8626 -0.4394,-0.8815 -0.4035,-0.8987 -0.3862,-0.9120 -0.3680,-0.9239 -0.3490,-0.9345 -0.3293,-0.9436 -0.3090,-0.9511 -0.2883,-0.9575 -0.2676,-0.9635 -0.2467,-0.9691 -0.2258,-0.9742 -0.2048,-0.9788 -0.2206,-0.9754 -0.2369,-0.9715 -0.2535,-0.9673 -0.2705,-0.9627 -0.2879,-0.9576 -0.3058,-0.9521 -0.3240,-0.9461 -0.3426,-0.9395 -0.3615,-0.9324 -0.3808,-0.9246 -0.4232,-0.9060 -0.4653,-0.8851 -0.5070,-0.8619 -0.5480,-0.8365 -0.5878,-0.8090 -0.6262,-0.7796 -0.6631,-0.7486 -0.6980,-0.7161 -0.7309,-0.6824 -0.7617,-0.6479 -0.7750,-0.6320 -0.7877,-0.6161 -0.7996,-0.6005 -0.8110,-0.5850 -0.8218,-0.5698 -0.8320,-0.5548 -0.8417,-0.5400 -0.8508,-0.5255 -0.8594,-0.5112" style="--s:0.860"/>
+<polygon class="hex" points="0.7300,-0.6615 0.7480,-0.6491 0.7650,-0.6355 0.7809,-0.6207 0.7956,-0.6048 0.8090,-0.5878 0.8216,-0.5701 0.8337,-0.5522 0.8454,-0.5341 0.8567,-0.5158 0.8676,-0.4973 0.8594,-0.5112 0.8508,-0.5255 0.8417,-0.5400 0.8320,-0.5548 0.8218,-0.5698 0.8110,-0.5850 0.7996,-0.6005 0.7877,-0.6161 0.7750,-0.6320 0.7617,-0.6479 0.7309,-0.6824 0.6980,-0.7161 0.6631,-0.7486 0.6262,-0.7796 0.5878,-0.8090 0.5480,-0.8365 0.5070,-0.8619 0.4653,-0.8851 0.4232,-0.9060 0.3808,-0.9246 0.3615,-0.9324 0.3426,-0.9395 0.3240,-0.9461 0.3058,-0.9521 0.2879,-0.9576 0.2705,-0.9627 0.2535,-0.9673 0.2369,-0.9715 0.2206,-0.9754 0.2048,-0.9788 0.2258,-0.9742 0.2467,-0.9691 0.2676,-0.9635 0.2883,-0.9575 0.3090,-0.9511 0.3293,-0.9436 0.3490,-0.9345 0.3680,-0.9239 0.3862,-0.9120 0.4035,-0.8987 0.4394,-0.8815 0.4751,-0.8626 0.5103,-0.8421 0.5449,-0.8200 0.5787,-0.7965 0.6115,-0.7716 0.6432,-0.7455 0.6736,-0.7184 0.7025,-0.6903" style="--s:0.860"/>
+<polygon class="hex" points="0.4096,0.9123 0.3900,0.9208 0.3700,0.9290 0.3499,0.9368 0.3295,0.9441 0.3090,0.9511 0.2882,0.9569 0.2669,0.9612 0.2453,0.9638 0.2236,0.9648 0.2018,0.9643 0.1626,0.9714 0.1227,0.9771 0.0821,0.9812 0.0412,0.9837 0.0000,0.9845 -0.0412,0.9837 -0.0821,0.9812 -0.1227,0.9771 -0.1626,0.9714 -0.2018,0.9643 -0.2236,0.9648 -0.2453,0.9638 -0.2669,0.9612 -0.2882,0.9569 -0.3090,0.9511 -0.3295,0.9441 -0.3499,0.9368 -0.3700,0.9290 -0.3900,0.9208 -0.4096,0.9123 -0.3948,0.9188 -0.3794,0.9252 -0.3635,0.9316 -0.3470,0.9379 -0.3299,0.9440 -0.3123,0.9500 -0.2940,0.9558 -0.2751,0.9614 -0.2555,0.9668 -0.2354,0.9719 -0.1902,0.9817 -0.1438,0.9896 -0.0964,0.9953 -0.0484,0.9988 -0.0000,1.0000 0.0484,0.9988 0.0964,0.9953 0.1438,0.9896 0.1902,0.9817 0.2354,0.9719 0.2555,0.9668 0.2751,0.9614 0.2940,0.9558 0.3123,0.9500 0.3299,0.9440 0.3470,0.9379 0.3635,0.9316 0.3794,0.9252 0.3948,0.9188" style="--s:0.860"/>
+<polygon class="hex" points="0.9942,-0.1077 0.9963,-0.0863 0.9979,-0.0648 0.9991,-0.0433 0.9998,-0.0217 1.0000,-0.0000 0.9992,0.0216 0.9966,0.0432 0.9924,0.0645 0.9867,0.0855 0.9794,0.1061 0.9741,0.1455 0.9672,0.1853 0.9586,0.2251 0.9483,0.2648 0.9363,0.3042 0.9228,0.3431 0.9078,0.3813 0.8914,0.4186 0.8736,0.4548 0.8547,0.4899 0.8485,0.5108 0.8408,0.5312 0.8317,0.5509 0.8211,0.5698 0.8090,0.5878 0.7961,0.6052 0.7828,0.6223 0.7692,0.6390 0.7553,0.6554 0.7410,0.6715 0.7518,0.6594 0.7627,0.6468 0.7737,0.6336 0.7847,0.6199 0.7958,0.6055 0.8070,0.5906 0.8182,0.5750 0.8294,0.5587 0.8405,0.5418 0.8516,0.5242 0.8749,0.4843 0.8967,0.4426 0.9168,0.3993 0.9350,0.3547 0.9511,0.3090 0.9649,0.2626 0.9764,0.2159 0.9856,0.1690 0.9925,0.1225 0.9971,0.0765 0.9984,0.0557 0.9994,0.0355 0.9999,0.0158 1.0000,-0.0034 0.9998,-0.0221 0.9992,-0.0402 0.9983,-0.0578 0.9972,-0.0750 0.9958,-0.0916" style="--s:0.860"/>
+<polygon class="hex" points="0.7410,0.6715 0.7553,0.6554 0.7692,0.6390 0.7828,0.6223 0.7961,0.6052 0.8090,0.5878 0.8211,0.5698 0.8317,0.5509 0.8408,0.5312 0.8485,0.5108 0.8547,0.4899 0.8407,0.5001 0.8252,0.5097 0.8081,0.5185 0.7896,0.5265 0.7697,0.5336 0.7484,0.5399 0.7260,0.5452 0.7025,0.5495 0.6781,0.5529 0.6530,0.5554 0.6249,0.5834 0.5955,0.6109 0.5648,0.6376 0.5329,0.6634 0.5000,0.6882 0.4663,0.7118 0.4319,0.7341 0.3970,0.7551 0.3618,0.7746 0.3265,0.7926 0.3163,0.8158 0.3055,0.8380 0.2941,0.8589 0.2822,0.8786 0.2697,0.8969 0.2567,0.9137 0.2434,0.9288 0.2297,0.9423 0.2158,0.9541 0.2018,0.9643 0.2236,0.9648 0.2453,0.9638 0.2669,0.9612 0.2882,0.9569 0.3090,0.9511 0.3295,0.9441 0.3499,0.9368 0.3700,0.9290 0.3900,0.9208 0.4096,0.9123 0.4461,0.8950 0.4824,0.8759 0.5183,0.8552 0.5534,0.8329 0.5878,0.8090 0.6211,0.7837 0.6532,0.7572 0.6840,0.7295 0.7133,0.7009" style="--s:0.883"/>
+<polygon class="hex" points="-0.3265,0.7926 -0.3618,0.7746 -0.3970,0.7551 -0.4319,0.7341 -0.4663,0.7118 -0.5000,0.6882 -0.5329,0.6634 -0.5648,0.6376 -0.5955,0.6109 -0.6249,0.5834 -0.6530,0.5554 -0.6781,0.5529 -0.7025,0.5495 -0.7260,0.5452 -0.7484,0.5399 -0.7697,0.5336 -0.7896,0.5265 -0.8081,0.5185 -0.8252,0.5097 -0.8407,0.5001 -0.8547,0.4899 -0.8485,0.5108 -0.8408,0.5312 -0.8317,0.5509 -0.8211,0.5698 -0.8090,0.5878 -0.7961,0.6052 -0.7828,0.6223 -0.7692,0.6390 -0.7553,0.6554 -0.7410,0.6715 -0.7133,0.7009 -0.6840,0.7295 -0.6532,0.7572 -0.6211,0.7837 -0.5878,0.8090 -0.5534,0.8329 -0.5183,0.8552 -0.4824,0.8759 -0.4461,0.8950 -0.4096,0.9123 -0.3900,0.9208 -0.3700,0.9290 -0.3499,0.9368 -0.3295,0.9441 -0.3090,0.9511 -0.2882,0.9569 -0.2669,0.9612 -0.2453,0.9638 -0.2236,0.9648 -0.2018,0.9643 -0.2158,0.9541 -0.2297,0.9423 -0.2434,0.9288 -0.2567,0.9137 -0.2697,0.8969 -0.2822,0.8786 -0.2941,0.8589 -0.3055,0.8380 -0.3163,0.8158" style="--s:0.883"/>
+<polygon class="hex" points="0.7300,-0.4494 0.7480,-0.4140 0.7650,-0.3775 0.7809,-0.3401 0.7956,-0.3018 0.8090,-0.2629 0.8211,-0.2235 0.8317,-0.1839 0.8408,-0.1442 0.8485,-0.1047 0.8547,-0.0656 0.8736,-0.0488 0.8914,-0.0316 0.9078,-0.0143 0.9228,0.0032 0.9363,0.0207 0.9483,0.0382 0.9586,0.0555 0.9672,0.0727 0.9741,0.0896 0.9794,0.1061 0.9867,0.0855 0.9924,0.0645 0.9966,0.0432 0.9992,0.0216 1.0000,-0.0000 0.9998,-0.0217 0.9991,-0.0433 0.9979,-0.0648 0.9963,-0.0863 0.9942,-0.1077 0.9890,-0.1478 0.9821,-0.1881 0.9735,-0.2286 0.9631,-0.2690 0.9511,-0.3090 0.9373,-0.3485 0.9220,-0.3873 0.9052,-0.4251 0.8870,-0.4618 0.8676,-0.4973 0.8567,-0.5158 0.8454,-0.5341 0.8337,-0.5522 0.8216,-0.5701 0.8090,-0.5878 0.7956,-0.6048 0.7809,-0.6207 0.7650,-0.6355 0.7480,-0.6491 0.7300,-0.6615 0.7354,-0.6450 0.7397,-0.6273 0.7428,-0.6084 0.7447,-0.5883 0.7454,-0.5671 0.7447,-0.5450 0.7428,-0.5220 0.7397,-0.4983 0.7354,-0.4741" style="--s:0.883"/>
+<polygon class="hex" points="0.4035,-0.8987 0.3862,-0.9120 0.3680,-0.9239 0.3490,-0.9345 0.3293,-0.9436 0.3090,-0.9511 0.2883,-0.9575 0.2676,-0.9635 0.2467,-0.9691 0.2258,-0.9742 0.2048,-0.9788 0.1651,-0.9863 0.1246,-0.9922 0.0834,-0.9965 0.0418,-0.9991 -0.0000,-1.0000 -0.0418,-0.9991 -0.0834,-0.9965 -0.1246,-0.9922 -0.1651,-0.9863 -0.2048,-0.9788 -0.2258,-0.9742 -0.2467,-0.9691 -0.2676,-0.9635 -0.2883,-0.9575 -0.3090,-0.9511 -0.3293,-0.9436 -0.3490,-0.9345 -0.3680,-0.9239 -0.3862,-0.9120 -0.4035,-0.8987 -0.3862,-0.8988 -0.3680,-0.8974 -0.3490,-0.8945 -0.3293,-0.8901 -0.3090,-0.8841 -0.2882,-0.8767 -0.2669,-0.8678 -0.2453,-0.8575 -0.2236,-0.8459 -0.2018,-0.8332 -0.1626,-0.8393 -0.1227,-0.8442 -0.0821,-0.8478 -0.0412,-0.8499 0.0000,-0.8507 0.0412,-0.8499 0.0821,-0.8478 0.1227,-0.8442 0.1626,-0.8393 0.2018,-0.8332 0.2236,-0.8459 0.2453,-0.8575 0.2669,-0.8678 0.2882,-0.8767 0.3090,-0.8841 0.3293,-0.8901 0.3490,-0.8945 0.3680,-0.8974 0.3862,-0.8988" style="--s:0.883"/>
+<polygon class="hex" points="-0.7300,-0.6615 -0.7480,-0.6491 -0.7650,-0.6355 -0.7809,-0.6207 -0.7956,-0.6048 -0.8090,-0.5878 -0.8216,-0.5701 -0.8337,-0.5522 -0.8454,-0.5341 -0.8567,-0.5158 -0.8676,-0.4973 -0.8870,-0.4618 -0.9052,-0.4251 -0.9220,-0.3873 -0.9373,-0.3485 -0.9511,-0.3090 -0.9631,-0.2690 -0.9735,-0.2286 -0.9821,-0.1881 -0.9890,-0.1478 -0.9942,-0.1077 -0.9963,-0.0863 -0.9979,-0.0648 -0.9991,-0.0433 -0.9998,-0.0217 -1.0000,0.0000 -0.9992,0.0216 -0.9966,0.0432 -0.9924,0.0645 -0.9867,0.0855 -0.9794,0.1061 -0.9741,0.0896 -0.9672,0.0727 -0.9586,0.0555 -0.9483,0.0382 -0.9363,0.0207 -0.9228,0.0032 -0.9078,-0.0143 -0.8914,-0.0316 -0.8736,-0.0488 -0.8547,-0.0656 -0.8485,-0.1047 -0.8408,-0.1442 -0.8317,-0.1839 -0.8211,-0.2235 -0.8090,-0.2629 -0.7956,-0.3018 -0.7809,-0.3401 -0.7650,-0.3775 -0.7480,-0.4140 -0.7300,-0.4494 -0.7354,-0.4741 -0.7397,-0.4983 -0.7428,-0.5220 -0.7447,-0.5450 -0.7454,-0.5671 -0.7447,-0.5883 -0.7428,-0.6084 -0.7397,-0.6273 -0.7354,-0.6450" style="--s:0.883"/>
+<polygon class="pent" points="-0.8547,-0.0656 -0.8736,-0.0488 -0.8914,-0.0316 -0.9078,-0.0143 -0.9228,0.0032 -0.9363,0.0207 -0.9483,0.0382 -0.9586,0.0555 -0.9672,0.0727 -0.9741,0.0896 -0.9794,0.1061 -0.9741,0.1455 -0.9672,0.1853 -0.9586,0.2251 -0.9483,0.2648 -0.9363,0.3042 -0.9228,0.3431 -0.9078,0.3813 -0.8914,0.4186 -0.8736,0.4548 -0.8547,0.4899 -0.8407,0.5001 -0.8252,0.5097 -0.8081,0.5185 -0.7896,0.5265 -0.7697,0.5336 -0.7484,0.5399 -0.7260,0.5452 -0.7025,0.5495 -0.6781,0.5529 -0.6530,0.5554 -0.6578,0.5250 -0.6616,0.4932 -0.6644,0.4604 -0.6661,0.4265 -0.6667,0.3919 -0.6661,0.3565 -0.6644,0.3207 -0.6616,0.2845 -0.6578,0.2483 -0.6530,0.2122 -0.6781,0.1858 -0.7025,0.1587 -0.7260,0.1311 -0.7484,0.1031 -0.7697,0.0748 -0.7896,0.0464 -0.8081,0.0181 -0.8252,-0.0101 -0.8407,-0.0381" style="--s:0.914"/>
+<polygon class="pent" points="0.4035,-0.8987 0.3862,-0.8988 0.3680,-0.8974 0.3490,-0.8945 0.3293,-0.8901 0.3090,-0.8841 0.2882,-0.8767 0.2669,-0.8678 0.2453,-0.8575 0.2236,-0.8459 0.2018,-0.8332 0.2236,-0.8114 0.2453,-0.7879 0.2669,-0.7630 0.2882,-0.7366 0.3090,-0.7089 0.3293,-0.6799 0.3490,-0.6500 0.3680,-0.6191 0.3862,-0.5875 0.4035,-0.5554 0.4394,-0.5489 0.4751,-0.5413 0.5103,-0.5328 0.5449,-0.5233 0.5787,-0.5129 0.6115,-0.5017 0.6432,-0.4896 0.6736,-0.4768 0.7025,-0.4634 0.7300,-0.4494 0.7354,-0.4741 0.7397,-0.4983 0.7428,-0.5220 0.7447,-0.5450 0.7454,-0.5671 0.7447,-0.5883 0.7428,-0.6084 0.7397,-0.6273 0.7354,-0.6450 0.7300,-0.6615 0.7025,-0.6903 0.6736,-0.7184 0.6432,-0.7455 0.6115,-0.7716 0.5787,-0.7965 0.5449,-0.8200 0.5103,-0.8421 0.4751,-0.8626 0.4394,-0.8815" style="--s:0.914"/>
+<polygon class="pent" points="0.0000,0.6866 -0.0329,0.7023 -0.0662,0.7172 -0.0997,0.7310 -0.1332,0.7437 -0.1667,0.7551 -0.1998,0.7653 -0.2325,0.7742 -0.2647,0.7817 -0.2960,0.7878 -0.3265,0.7926 -0.3163,0.8158 -0.3055,0.8380 -0.2941,0.8589 -0.2822,0.8786 -0.2697,0.8969 -0.2567,0.9137 -0.2434,0.9288 -0.2297,0.9423 -0.2158,0.9541 -0.2018,0.9643 -0.1626,0.9714 -0.1227,0.9771 -0.0821,0.9812 -0.0412,0.9837 0.0000,0.9845 0.0412,0.9837 0.0821,0.9812 0.1227,0.9771 0.1626,0.9714 0.2018,0.9643 0.2158,0.9541 0.2297,0.9423 0.2434,0.9288 0.2567,0.9137 0.2697,0.8969 0.2822,0.8786 0.2941,0.8589 0.3055,0.8380 0.3163,0.8158 0.3265,0.7926 0.2960,0.7878 0.2647,0.7817 0.2325,0.7742 0.1998,0.7653 0.1667,0.7551 0.1332,0.7437 0.0997,0.7310 0.0662,0.7172 0.0329,0.7023" style="--s:0.914"/>
+<polygon class="pent" points="0.8547,-0.0656 0.8407,-0.0381 0.8252,-0.0101 0.8081,0.0181 0.7896,0.0464 0.7697,0.0748 0.7484,0.1031 0.7260,0.1311 0.7025,0.1587 0.6781,0.1858 0.6530,0.2122 0.6578,0.2483 0.6616,0.2845 0.6644,0.3207 0.6661,0.3565 0.6667,0.3919 0.6661,0.4265 0.6644,0.4604 0.6616,0.4932 0.6578,0.5250 0.6530,0.5554 0.6781,0.5529 0.7025,0.5495 0.7260,0.5452 0.7484,0.5399 0.7697,0.5336 0.7896,0.5265 0.8081,0.5185 0.8252,0.5097 0.8407,0.5001 0.8547,0.4899 0.8736,0.4548 0.8914,0.4186 0.9078,0.3813 0.9228,0.3431 0.9363,0.3042 0.9483,0.2648 0.9586,0.2251 0.9672,0.1853 0.9741,0.1455 0.9794,0.1061 0.9741,0.0896 0.9672,0.0727 0.9586,0.0555 0.9483,0.0382 0.9363,0.0207 0.9228,0.0032 0.9078,-0.0143 0.8914,-0.0316 0.8736,-0.0488" style="--s:0.914"/>
+<polygon class="pent" points="-0.4035,-0.5554 -0.3862,-0.5875 -0.3680,-0.6191 -0.3490,-0.6500 -0.3293,-0.6799 -0.3090,-0.7089 -0.2882,-0.7366 -0.2669,-0.7630 -0.2453,-0.7879 -0.2236,-0.8114 -0.2018,-0.8332 -0.2236,-0.8459 -0.2453,-0.8575 -0.2669,-0.8678 -0.2882,-0.8767 -0.3090,-0.8841 -0.3293,-0.8901 -0.3490,-0.8945 -0.3680,-0.8974 -0.3862,-0.8988 -0.4035,-0.8987 -0.4394,-0.8815 -0.4751,-0.8626 -0.5103,-0.8421 -0.5449,-0.8200 -0.5787,-0.7965 -0.6115,-0.7716 -0.6432,-0.7455 -0.6736,-0.7184 -0.7025,-0.6903 -0.7300,-0.6615 -0.7354,-0.6450 -0.7397,-0.6273 -0.7428,-0.6084 -0.7447,-0.5883 -0.7454,-0.5671 -0.7447,-0.5450 -0.7428,-0.5220 -0.7397,-0.4983 -0.7354,-0.4741 -0.7300,-0.4494 -0.7025,-0.4634 -0.6736,-0.4768 -0.6432,-0.4896 -0.6115,-0.5017 -0.5787,-0.5129 -0.5449,-0.5233 -0.5103,-0.5328 -0.4751,-0.5413 -0.4394,-0.5489" style="--s:0.914"/>
+<polygon class="hex" points="-0.3265,0.1061 -0.3618,0.1176 -0.3970,0.1290 -0.4319,0.1403 -0.4663,0.1515 -0.5000,0.1625 -0.5329,0.1731 -0.5648,0.1835 -0.5955,0.1935 -0.6249,0.2030 -0.6530,0.2122 -0.6578,0.2483 -0.6616,0.2845 -0.6644,0.3207 -0.6661,0.3565 -0.6667,0.3919 -0.6661,0.4265 -0.6644,0.4604 -0.6616,0.4932 -0.6578,0.5250 -0.6530,0.5554 -0.6249,0.5834 -0.5955,0.6109 -0.5648,0.6376 -0.5329,0.6634 -0.5000,0.6882 -0.4663,0.7118 -0.4319,0.7341 -0.3970,0.7551 -0.3618,0.7746 -0.3265,0.7926 -0.2960,0.7878 -0.2647,0.7817 -0.2325,0.7742 -0.1998,0.7653 -0.1667,0.7551 -0.1332,0.7437 -0.0997,0.7310 -0.0662,0.7172 -0.0329,0.7023 0.0000,0.6866 0.0000,0.6571 0.0000,0.6261 0.0000,0.5938 0.0000,0.5603 0.0000,0.5257 0.0000,0.4903 0.0000,0.4541 0.0000,0.4174 0.0000,0.3804 0.0000,0.3433 -0.0329,0.3219 -0.0662,0.2998 -0.0997,0.2769 -0.1332,0.2534 -0.1667,0.2294 -0.1998,0.2050 -0.2325,0.1803 -0.2647,0.1556 -0.2960,0.1308" style="--s:0.955"/>
+<polygon class="hex" points="0.0000,0.3433 0.0000,0.3804 0.0000,0.4174 0.0000,0.4541 0.0000,0.4903 0.0000,0.5257 0.0000,0.5603 0.0000,0.5938 0.0000,0.6261 0.0000,0.6571 0.0000,0.6866 0.0329,0.7023 0.0662,0.7172 0.0997,0.7310 0.1332,0.7437 0.1667,0.7551 0.1998,0.7653 0.2325,0.7742 0.2647,0.7817 0.2960,0.7878 0.3265,0.7926 0.3618,0.7746 0.3970,0.7551 0.4319,0.7341 0.4663,0.7118 0.5000,0.6882 0.5329,0.6634 0.5648,0.6376 0.5955,0.6109 0.6249,0.5834 0.6530,0.5554 0.6578,0.5250 0.6616,0.4932 0.6644,0.4604 0.6661,0.4265 0.6667,0.3919 0.6661,0.3565 0.6644,0.3207 0.6616,0.2845 0.6578,0.2483 0.6530,0.2122 0.6249,0.2030 0.5955,0.1935 0.5648,0.1835 0.5329,0.1731 0.5000,0.1625 0.4663,0.1515 0.4319,0.1403 0.3970,0.1290 0.3618,0.1176 0.3265,0.1061 0.2960,0.1308 0.2647,0.1556 0.2325,0.1803 0.1998,0.2050 0.1667,0.2294 0.1332,0.2534 0.0997,0.2769 0.0662,0.2998 0.0329,0.3219" style="--s:0.955"/>
+<polygon class="hex" points="-0.4035,-0.5554 -0.3862,-0.5316 -0.3680,-0.5065 -0.3490,-0.4804 -0.3293,-0.4533 -0.3090,-0.4253 -0.2882,-0.3966 -0.2669,-0.3674 -0.2453,-0.3377 -0.2236,-0.3078 -0.2018,-0.2777 -0.1626,-0.2798 -0.1227,-0.2814 -0.0821,-0.2826 -0.0412,-0.2833 0.0000,-0.2836 0.0412,-0.2833 0.0821,-0.2826 0.1227,-0.2814 0.1626,-0.2798 0.2018,-0.2777 0.2236,-0.3078 0.2453,-0.3377 0.2669,-0.3674 0.2882,-0.3966 0.3090,-0.4253 0.3293,-0.4533 0.3490,-0.4804 0.3680,-0.5065 0.3862,-0.5316 0.4035,-0.5554 0.3862,-0.5875 0.3680,-0.6191 0.3490,-0.6500 0.3293,-0.6799 0.3090,-0.7089 0.2882,-0.7366 0.2669,-0.7630 0.2453,-0.7879 0.2236,-0.8114 0.2018,-0.8332 0.1626,-0.8393 0.1227,-0.8442 0.0821,-0.8478 0.0412,-0.8499 0.0000,-0.8507 -0.0412,-0.8499 -0.0821,-0.8478 -0.1227,-0.8442 -0.1626,-0.8393 -0.2018,-0.8332 -0.2236,-0.8114 -0.2453,-0.7879 -0.2669,-0.7630 -0.2882,-0.7366 -0.3090,-0.7089 -0.3293,-0.6799 -0.3490,-0.6500 -0.3680,-0.6191 -0.3862,-0.5875" style="--s:0.955"/>
+<polygon class="pent" points="-0.3265,0.1061 -0.2960,0.1308 -0.2647,0.1556 -0.2325,0.1803 -0.1998,0.2050 -0.1667,0.2294 -0.1332,0.2534 -0.0997,0.2769 -0.0662,0.2998 -0.0329,0.3219 0.0000,0.3433 0.0329,0.3219 0.0662,0.2998 0.0997,0.2769 0.1332,0.2534 0.1667,0.2294 0.1998,0.2050 0.2325,0.1803 0.2647,0.1556 0.2960,0.1308 0.3265,0.1061 0.3163,0.0682 0.3055,0.0297 0.2941,-0.0092 0.2822,-0.0484 0.2697,-0.0876 0.2567,-0.1267 0.2434,-0.1654 0.2297,-0.2036 0.2158,-0.2411 0.2018,-0.2777 0.1626,-0.2798 0.1227,-0.2814 0.0821,-0.2826 0.0412,-0.2833 0.0000,-0.2836 -0.0412,-0.2833 -0.0821,-0.2826 -0.1227,-0.2814 -0.1626,-0.2798 -0.2018,-0.2777 -0.2158,-0.2411 -0.2297,-0.2036 -0.2434,-0.1654 -0.2567,-0.1267 -0.2697,-0.0876 -0.2822,-0.0484 -0.2941,-0.0092 -0.3055,0.0297 -0.3163,0.0682" style="--s:0.980"/>
+<a class="tool" href="fcw-gu12-white/" aria-label="GU12 White"><polygon class="hex" points="-0.7300,-0.4494 -0.7480,-0.4140 -0.7650,-0.3775 -0.7809,-0.3401 -0.7956,-0.3018 -0.8090,-0.2629 -0.8211,-0.2235 -0.8317,-0.1839 -0.8408,-0.1442 -0.8485,-0.1047 -0.8547,-0.0656 -0.8407,-0.0381 -0.8252,-0.0101 -0.8081,0.0181 -0.7896,0.0464 -0.7697,0.0748 -0.7484,0.1031 -0.7260,0.1311 -0.7025,0.1587 -0.6781,0.1858 -0.6530,0.2122 -0.6249,0.2030 -0.5955,0.1935 -0.5648,0.1835 -0.5329,0.1731 -0.5000,0.1625 -0.4663,0.1515 -0.4319,0.1403 -0.3970,0.1290 -0.3618,0.1176 -0.3265,0.1061 -0.3163,0.0682 -0.3055,0.0297 -0.2941,-0.0092 -0.2822,-0.0484 -0.2697,-0.0876 -0.2567,-0.1267 -0.2434,-0.1654 -0.2297,-0.2036 -0.2158,-0.2411 -0.2018,-0.2777 -0.2236,-0.3078 -0.2453,-0.3377 -0.2669,-0.3674 -0.2882,-0.3966 -0.3090,-0.4253 -0.3293,-0.4533 -0.3490,-0.4804 -0.3680,-0.5065 -0.3862,-0.5316 -0.4035,-0.5554 -0.4394,-0.5489 -0.4751,-0.5413 -0.5103,-0.5328 -0.5449,-0.5233 -0.5787,-0.5129 -0.6115,-0.5017 -0.6432,-0.4896 -0.6736,-0.4768 -0.7025,-0.4634" style="--s:0.955"/></a>
+<a class="tool" href="matchday/" aria-label="Match Day"><polygon class="hex" points="0.4035,-0.5554 0.3862,-0.5316 0.3680,-0.5065 0.3490,-0.4804 0.3293,-0.4533 0.3090,-0.4253 0.2882,-0.3966 0.2669,-0.3674 0.2453,-0.3377 0.2236,-0.3078 0.2018,-0.2777 0.2158,-0.2411 0.2297,-0.2036 0.2434,-0.1654 0.2567,-0.1267 0.2697,-0.0876 0.2822,-0.0484 0.2941,-0.0092 0.3055,0.0297 0.3163,0.0682 0.3265,0.1061 0.3618,0.1176 0.3970,0.1290 0.4319,0.1403 0.4663,0.1515 0.5000,0.1625 0.5329,0.1731 0.5648,0.1835 0.5955,0.1935 0.6249,0.2030 0.6530,0.2122 0.6781,0.1858 0.7025,0.1587 0.7260,0.1311 0.7484,0.1031 0.7697,0.0748 0.7896,0.0464 0.8081,0.0181 0.8252,-0.0101 0.8407,-0.0381 0.8547,-0.0656 0.8485,-0.1047 0.8408,-0.1442 0.8317,-0.1839 0.8211,-0.2235 0.8090,-0.2629 0.7956,-0.3018 0.7809,-0.3401 0.7650,-0.3775 0.7480,-0.4140 0.7300,-0.4494 0.7025,-0.4634 0.6736,-0.4768 0.6432,-0.4896 0.6115,-0.5017 0.5787,-0.5129 0.5449,-0.5233 0.5103,-0.5328 0.4751,-0.5413 0.4394,-0.5489" style="--s:0.955"/></a>
+    </g>
+    <circle class="gloss" r="1" fill="url(#shade)"/>
+    <g class="labels">
+<text x="0.5774" y="-0.1876" font-size="0.1533"><tspan x="0.5774" dy="-0.50em"></tspan><tspan x="0.5774" dy="0.00em">Match</tspan><tspan x="0.5774" dy="1.00em">Day</tspan></text>
+<text x="-0.5774" y="-0.1876" font-size="0.1533"><tspan x="-0.5774" dy="-0.50em"></tspan><tspan x="-0.5774" dy="0.00em">GU12</tspan><tspan x="-0.5774" dy="1.00em">White</tspan></text>
+    </g>
+    <circle r="1" fill="none" stroke="#1d2a33" stroke-width=".018"/>
+  </g>
+</svg>
 </div>
-
-<script>
-/* ---------- state ---------- */
-const KEY = "soccer-matchday-v1";
-const COLORS = ["#f6a8d8","#a8e6b8","#fcd98a","#b9c8f5","#f7b59a","#9ed8e0","#d6b8f0","#e0e6a0","#f5a3a3","#c7d0d8"];
-let S = {
-  step: "players", names: "", teamCount: 2, teams: [],
-  format: null, pendingFormat: null,
-  matches: [],            // {id, round, home, away, done, winner, next:{id,side}|null}
-  singlePick: [], goals: [], live: null, playTab: "fixtures"
-};
-const uid = () => Math.random().toString(36).slice(2, 9);
-const $ = id => document.getElementById(id);
-const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
-function load(){
-  try{
-    const raw = localStorage.getItem(KEY);
-    if (raw) { Object.assign(S, JSON.parse(raw)); return; }
-    // First run: carry over the roster from the old camp toolkit if there is one
-    const old = JSON.parse(localStorage.getItem("soccerCampToolkitState") || "null");
-    if (old && typeof old.namesText === "string") S.names = old.namesText;
-  }catch(e){}
-}
-const names = () => S.names.split("\n").map(n => n.trim()).filter(Boolean);
-
-const team = id => S.teams.find(t => t.id === id);
-const tname = id => team(id)?.name ?? "TBD";
-const inComp = () => !!S.format;
-const score = (m, side) => S.goals.filter(g => g.matchId === m.id && g.teamId === m[side]).length;
-
-/* ---------- navigation ---------- */
-function canGo(step){
-  if (step === "players" || step === "teams") return true;
-  if (step === "format") return S.teams.length >= 2;
-  if (step === "play") return inComp();
-}
-function go(step){ if (!canGo(step)) return; S.step = step; save(); render(); window.scrollTo(0,0); }
-$("steps").addEventListener("click", e => { const b = e.target.closest("button"); if (b) go(b.dataset.step); });
-document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => go(b.dataset.go)));
-
-/* ---------- players ---------- */
-function setNames(list){ S.names = list.join("\n"); save(); renderCounts(); renderToday(); }
-function renderToday(){
-  const list = names();
-  $("today").innerHTML = list.length ? list.map((n,i) => `<span class="chip">${esc(n)}<button type="button" data-rm="${i}" aria-label="Remove ${esc(n)}">✕</button></span>`).join("")
-    : `<span class="small">Load a roster above or add names below.</span>`;
-  $("todayHint").hidden = !list.length; $("clearWrap").hidden = !list.length; $("savePanel").hidden = !list.length;
-}
-$("today").addEventListener("click", e => {
-  const b = e.target.closest("[data-rm]"); if (!b) return;
-  const list = names(); list.splice(+b.dataset.rm, 1); setNames(list);
-});
-function addTyped(){
-  const typed = $("addNames").value.split(/[\n,]/).map(x => x.trim()).filter(Boolean);
-  if (!typed.length) return;
-  addToNames(typed); $("addNames").value = ""; $("addNames").style.height = "46px";
-}
-$("addBtn").addEventListener("click", addTyped);
-$("addNames").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey && !$("addNames").value.includes("\n")) { e.preventDefault(); addTyped(); } });
-$("addNames").addEventListener("input", e => { const t = e.target; t.style.height = "46px"; if (t.value.includes("\n")) t.style.height = Math.min(t.scrollHeight, 220) + "px"; });
-let clearArmed = false, clearTimer;
-$("clearToday").addEventListener("click", () => {
-  if (!clearArmed) { clearArmed = true; $("clearToday").textContent = "Tap again to clear"; clearTimer = setTimeout(() => { clearArmed = false; $("clearToday").textContent = "Clear list"; }, 2500); return; }
-  clearTimeout(clearTimer); clearArmed = false; $("clearToday").textContent = "Clear list"; setNames([]);
-});
-function renderCounts(){
-  const n = names().length;
-  $("nameCount").textContent = n ? String(n) : "";
-  const h = names().length, k = S.teamCount, base = Math.floor(h/k), extra = h%k;
-  $("sizeNote").textContent = h === 0 ? `${k} empty teams to name yourself` :
-    extra === 0 ? `${k} teams of ${base}` : `${extra} team${extra===1?"":"s"} of ${base+1}, ${k-extra} of ${base}`;
-}
-
-/* ---------- saved rosters (kept separately so "Clear everything" leaves them alone) ---------- */
-const RKEY = "soccer-rosters-v1";
-let rosters = [];
-try { rosters = JSON.parse(localStorage.getItem(RKEY) || "[]"); } catch(e) { rosters = []; }
-const saveRosters = () => { try { localStorage.setItem(RKEY, JSON.stringify(rosters)); } catch(e) {} };
-const b64e = str => btoa(unescape(encodeURIComponent(str))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
-const b64d = str => decodeURIComponent(escape(atob(str.replace(/-/g,"+").replace(/_/g,"/"))));
-function upsertRoster(name, players){
-  const i = rosters.findIndex(r => r.name.toLowerCase() === name.toLowerCase());
-  if (i >= 0) rosters[i].players = players; else rosters.push({ id: uid(), name, players });
-  saveRosters();
-}
-function addToNames(players){
-  const have = new Set(names().map(n => n.toLowerCase()));
-  const add = players.filter(p => !have.has(p.toLowerCase()));
-  setNames([...names(), ...add]);
-  return add.length;
-}
-let delArmed = null, delTimer;
-function renderRosters(){
-  $("rosterList").innerHTML = rosters.length ? rosters.map(r => `
-    <div class="roster">
-      <button class="rload" data-radd="${r.id}"><b>${esc(r.name)}</b><span>${r.players.length} player${r.players.length===1?"":"s"}</span></button>
-      <button class="mini" data-rshare="${r.id}">Share</button>
-      <button class="mini del ${delArmed===r.id?"armed":""}" data-rdel="${r.id}" aria-label="Delete ${esc(r.name)}">${delArmed===r.id?"Delete?":"✕"}</button>
-    </div>`).join("") : `<div class="small">None saved yet. Add names below, then save the list as a roster.</div>`;
-}
-$("saveRoster").addEventListener("click", () => {
-  const nm = $("rosterName").value.trim(), ps = names();
-  if (!nm) { $("rosterName").focus(); $("rosterName").placeholder = "Name the roster first"; return; }
-  if (!ps.length) return;
-  upsertRoster(nm, ps); $("rosterName").value = ""; $("rosterName").placeholder = `Saved as ${nm}`; renderRosters();
-});
-$("rosterList").addEventListener("click", async e => {
-  const add = e.target.closest("[data-radd]"), share = e.target.closest("[data-rshare]"), del = e.target.closest("[data-rdel]");
-  if (add) { const r = rosters.find(x => x.id === add.dataset.radd); const n = addToNames(r.players);
-    add.querySelector("span").textContent = n ? `Added ${n}` : "Already in today's list"; setTimeout(renderRosters, 1400); return; }
-  if (share) {
-    const r = rosters.find(x => x.id === share.dataset.rshare);
-    const url = location.href.split("#")[0] + "#roster=" + b64e(JSON.stringify({ n: r.name, p: r.players }));
-    try {
-      if (navigator.share) { await navigator.share({ title: `${r.name} roster`, text: `${r.name} roster for Match day`, url }); return; }
-      await navigator.clipboard.writeText(url); share.textContent = "Link copied"; setTimeout(renderRosters, 1800);
-    } catch (err) { if (err && err.name === "AbortError") return; window.prompt("Copy this link:", url); }
-    return;
-  }
-  if (del) {
-    const id = del.dataset.rdel; clearTimeout(delTimer);
-    if (delArmed !== id) { delArmed = id; renderRosters(); delTimer = setTimeout(() => { delArmed = null; renderRosters(); }, 3000); return; }
-    rosters = rosters.filter(r => r.id !== id); delArmed = null; saveRosters(); renderRosters();
-  }
-});
-// A shared roster link: #roster=... (never sent to the server). Offer to save it, then clean the URL.
-function checkIncoming(){
-  const m = location.hash.match(/^#roster=([A-Za-z0-9_-]+)$/); if (!m) return;
-  history.replaceState(null, "", location.pathname + location.search);
-  let data; try { data = JSON.parse(b64d(m[1])); } catch(e) { return; }
-  if (!data || typeof data.n !== "string" || !Array.isArray(data.p)) return;
-  const players = data.p.map(x => String(x).trim()).filter(Boolean).slice(0, 60), nm = data.n.trim().slice(0, 60) || "Shared roster";
-  const exists = rosters.some(r => r.name.toLowerCase() === nm.toLowerCase());
-  S.step = "players";
-  $("incoming").hidden = false;
-  $("incoming").innerHTML = `<label class="l">Roster shared with you: ${esc(nm)}</label>
-    <div class="small">${players.map(esc).join(", ")}</div>
-    <div class="row" style="margin-top:10px"><button class="mini primary" id="inSave">${exists?"Replace my copy":"Save to this device"}</button><button class="mini" id="inSkip">No thanks</button></div>`;
-  $("inSave").onclick = () => { upsertRoster(nm, players); $("incoming").hidden = true; renderRosters(); };
-  $("inSkip").onclick = () => { $("incoming").hidden = true; };
-}
-
-/* ---------- teams ---------- */
-for (let n = 2; n <= 16; n++) $("teamCount").insertAdjacentHTML("beforeend", `<option value="${n}">${n} teams</option>`);
-$("teamCount").addEventListener("change", e => { S.teamCount = +e.target.value; save(); renderCounts(); });
-let shuffleArmed = false, shuffleTimer;
-$("shuffle").addEventListener("click", () => {
-  if (inComp() && !shuffleArmed) {
-    shuffleArmed = true; $("shuffle").textContent = "Tap again: this ends the current competition";
-    shuffleTimer = setTimeout(() => { shuffleArmed = false; $("shuffle").textContent = "Shuffle into teams"; }, 3000);
-    return;
-  }
-  clearTimeout(shuffleTimer); shuffleArmed = false; $("shuffle").textContent = "Shuffle into teams";
-  const pool = names();
-  for (let i = pool.length-1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [pool[i],pool[j]] = [pool[j],pool[i]]; }
-  const k = S.teamCount;
-  S.teams = Array.from({length:k}, (_,i) => ({ id: uid(), name: S.teams[i]?.name ?? `Team ${i+1}`, color: COLORS[i%COLORS.length], players: [] }));
-  pool.forEach((p,i) => S.teams[i%k].players.push(p));
-  endComp(); save(); render();
-});
-function renderTeams(){
-  $("teamCount").value = S.teamCount;
-  $("lockNote").hidden = !inComp();
-  $("teamTip").hidden = !S.teams.length;
-  $("toFormat").disabled = S.teams.length < 2;
-  $("teamList").innerHTML = S.teams.map((t,i) => `
-    <div class="team" style="--c:${t.color}">
-      <input class="tname" type="text" value="${esc(t.name)}" data-team="${t.id}" aria-label="Team ${i+1} name">
-      <div class="cnt">${t.players.length} player${t.players.length===1?"":"s"}</div>
-      ${t.players.length ? `<ul>${t.players.map((p,pi) => `<li data-team="${t.id}" data-p="${pi}" title="Move to next team">${esc(p)}</li>`).join("")}</ul>` : ""}
-    </div>`).join("");
-}
-$("teamList").addEventListener("input", e => {
-  if (!e.target.matches("input.tname")) return;
-  team(e.target.dataset.team).name = e.target.value.trim() || "Unnamed"; save();
-});
-$("teamList").addEventListener("click", e => {
-  const li = e.target.closest("li[data-p]"); if (!li) return;
-  const i = S.teams.findIndex(t => t.id === li.dataset.team);
-  const [p] = S.teams[i].players.splice(+li.dataset.p, 1);
-  S.teams[(i+1) % S.teams.length].players.push(p);
-  save(); renderTeams();
-});
-
-/* ---------- format ---------- */
-$("formats").addEventListener("click", e => {
-  const b = e.target.closest(".fmt"); if (!b || b.disabled) return;
-  S.pendingFormat = b.dataset.fmt; save(); renderFormat();
-});
-function renderFormat(){
-  const f = S.pendingFormat ?? S.format;
-  document.querySelectorAll(".fmt").forEach(b => b.classList.toggle("on", b.dataset.fmt === f));
-  const n = S.teams.length;
-  const notes = {
-    single: "Pick the two teams on the next screen. Play as many games as you like.",
-    roundrobin: `${n*(n-1)/2} games over ${n%2 ? n : n-1} rounds.` + (n%2 ? " One team sits out each round." : ""),
-    knockout: (() => { let s=1; while(s<n) s*=2; const byes=s-n; return `${Math.log2(s)} rounds.` + (byes ? ` ${byes} team${byes===1?" gets a bye":"s get byes"} into round 2, in team order.` : ""); })()
-  };
-  $("fmtNote").textContent = f ? notes[f] : "";
-  const same = f === S.format;
-  $("startComp").disabled = !f;
-  $("startComp").textContent = !f ? "Start" : same ? "Continue" : inComp() ? "Start over with this format" : "Start";
-}
-let startArmed = false, startTimer;
-$("startComp").addEventListener("click", () => {
-  const f = S.pendingFormat ?? S.format;
-  if (f === S.format) { go("play"); return; }
-  if (inComp() && S.goals.length && !startArmed) {
-    startArmed = true; $("startComp").textContent = "Tap again: current results will be cleared";
-    startTimer = setTimeout(() => { startArmed = false; renderFormat(); }, 3000); return;
-  }
-  clearTimeout(startTimer); startArmed = false;
-  startComp(f); go("play");
-});
-function endComp(){ S.format = null; S.pendingFormat = null; S.matches = []; S.goals = []; S.live = null; S.singlePick = []; }
-function startComp(f){
-  S.format = f; S.pendingFormat = null; S.matches = []; S.goals = []; S.live = null; S.singlePick = []; S.playTab = "fixtures";
-  const ids = S.teams.map(t => t.id);
-  if (f === "roundrobin") {
-    const t = [...ids]; if (t.length % 2) t.push(null);
-    const n = t.length;
-    for (let r = 0; r < n-1; r++) {
-      for (let i = 0; i < n/2; i++) {
-        const h = t[i], a = t[n-1-i];
-        if (h && a) S.matches.push({ id: uid(), round: r, home: h, away: a, done: false, winner: null });
-      }
-      t.splice(1, 0, t.pop());
-    }
-  }
-  if (f === "knockout") {
-    let size = 1; while (size < ids.length) size *= 2;
-    const rounds = Math.log2(size);
-    // build empty tree, then fill round 0; standard pairing 1v last so top seeds get the byes
-    const tree = [];
-    for (let r = 0; r < rounds; r++) {
-      tree.push(Array.from({length: size/2**(r+1)}, () => ({ id: uid(), round: r, home: null, away: null, done: false, winner: null, next: null })));
-    }
-    for (let r = 0; r < rounds-1; r++) tree[r].forEach((m,i) => m.next = { id: tree[r+1][Math.floor(i/2)].id, side: i%2 ? "away" : "home" });
-    const seeds = [...ids]; while (seeds.length < size) seeds.push(null);
-    // bracket order so seeds 1 and 2 can only meet in the final
-    let order = [0]; while (order.length < size) order = order.flatMap(s => [s, 2*order.length-1-s]);
-    tree[0].forEach((m,i) => { m.home = seeds[order[2*i]]; m.away = seeds[order[2*i+1]]; });
-    S.matches = tree.flat();
-    tree[0].forEach(m => { if (!m.home || !m.away) finish(m, m.home || m.away, true); });
-  }
-}
-
-/* ---------- play ---------- */
-const byId = id => S.matches.find(m => m.id === id);
-function finish(m, winner, bye){
-  m.done = true; m.winner = winner; m.bye = !!bye;
-  if (m.next && winner) byId(m.next.id)[m.next.side] = winner;
-}
-function roundName(r){
-  if (S.format !== "knockout") return `Round ${r+1}`;
-  const total = Math.max(...S.matches.map(m => m.round)) + 1, left = total - r;
-  return left === 1 ? "Final" : left === 2 ? "Semifinals" : left === 3 ? "Quarterfinals" : `Round ${r+1}`;
-}
-function matchRow(m){
-  const hs = score(m,"home"), as = score(m,"away"), started = S.goals.some(g => g.matchId === m.id);
-  const ready = m.home && m.away && !m.bye;
-  const cls = ["match", S.live === m.id ? "live" : "", m.done ? "done" : ""].join(" ");
-  const side = s => { const id = m[s];
-    if (!id) return `<span class="t tbd ${s==="home"?"h":""}">${m.bye ? "Bye" : "TBD"}</span>`;
-    const t = team(id); const win = m.done && m.winner === id && S.format === "knockout";
-    return `<span class="t ${s==="home"?"h":""} ${win?"win":""}">${s==="away"?`<span class="dot" style="--c:${t.color}"></span>`:""}${esc(t.name)}${s==="home"?`<span class="dot" style="--c:${t.color}"></span>`:""}</span>`; };
-  const mid = m.bye ? "—" : (started || m.done) ? `${hs}–${as}` : "vs";
-  return `<button class="${cls}" data-match="${m.id}" ${ready?"":"disabled"}>${side("home")}<span class="s">${mid}</span>${side("away")}</button>`;
-}
-function standings(){
-  const T = {}; S.teams.forEach(t => T[t.id] = { t, p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0 });
-  S.matches.filter(m => m.done).forEach(m => {
-    const h = score(m,"home"), a = score(m,"away"), H = T[m.home], A = T[m.away];
-    H.p++; A.p++; H.gf += h; H.ga += a; A.gf += a; A.ga += h;
-    if (h > a) { H.w++; H.pts += 3; A.l++; } else if (a > h) { A.w++; A.pts += 3; H.l++; } else { H.d++; A.d++; H.pts++; A.pts++; }
-  });
-  return Object.values(T).sort((x,y) => y.pts-x.pts || (y.gf-y.ga)-(x.gf-x.ga) || y.gf-x.gf);
-}
-function scorers(){
-  const c = {}; S.goals.forEach(g => { const k = g.player || "Unnamed scorer"; c[k] = (c[k]||0) + 1; });
-  return Object.entries(c).sort((a,b) => b[1]-a[1]);
-}
-function renderPlay(){
-  document.querySelector(".foot").hidden = !!S.live;
-  if (S.live) { $("playList").hidden = true; $("liveBoard").hidden = false; renderLive(); return; }
-  $("playList").hidden = false; $("liveBoard").hidden = true;
-  const title = { single: "Single games", roundrobin: "Round robin", knockout: "Knockout" }[S.format];
-  const tabs = S.format === "roundrobin" ? ["fixtures","standings","scorers"] : ["fixtures","scorers"];
-  if (!tabs.includes(S.playTab)) S.playTab = "fixtures";
-  let h = `<h2>${title}</h2><div class="tabs">${tabs.map(t => `<button data-tab="${t}" class="${S.playTab===t?"on":""}">${{fixtures:S.format==="single"?"Games":"Fixtures",standings:"Standings",scorers:"Scorers"}[t]}</button>`).join("")}</div>`;
-  if (S.playTab === "fixtures") {
-    if (S.format === "single") {
-      h += `<div class="panel"><label class="l">New game: pick two teams</label><div class="pick">${S.teams.map(t =>
-        `<button class="fmt ${S.singlePick.includes(t.id)?"on":""}" data-pick="${t.id}" style="padding:10px"><b style="font-size:1.15rem"><span class="dot" style="--c:${t.color};margin-left:0"></span>${esc(t.name)}</b></button>`).join("")}</div>
-        <button class="btn" id="newGame" ${S.singlePick.length===2?"":"disabled"}>Start game</button></div>`;
-      const games = [...S.matches].reverse();
-      h += games.length ? `<div class="rlabel">Games</div>` + games.map(matchRow).join("") : "";
-    } else {
-      if (S.format === "knockout") {
-        const fin = S.matches.find(m => !m.next);
-        if (fin?.done) h += `<div class="champ"><div class="small">Champions</div><b>${esc(tname(fin.winner))}</b></div>`;
-      }
-      const played = S.matches.filter(m => m.done && !m.bye).length, total = S.matches.filter(m => !m.bye).length;
-      h += `<p class="small">${played} of ${total} games played. Tap a game to keep score.</p>`;
-      const rounds = [...new Set(S.matches.map(m => m.round))];
-      rounds.forEach(r => { h += `<div class="rlabel">${roundName(r)}</div>` + S.matches.filter(m => m.round === r).map(matchRow).join(""); });
-    }
-  }
-  if (S.playTab === "standings") {
-    h += `<table class="std"><thead><tr><th>#</th><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>Pts</th></tr></thead><tbody>` +
-      standings().map((r,i) => `<tr><td>${i+1}</td><td><span class="dot" style="--c:${r.t.color};margin-left:0"></span>${esc(r.t.name)}</td><td>${r.p}</td><td>${r.w}</td><td>${r.d}</td><td>${r.l}</td><td>${r.gf-r.ga>0?"+":""}${r.gf-r.ga}</td><td><b>${r.pts}</b></td></tr>`).join("") + `</tbody></table>`;
-  }
-  if (S.playTab === "scorers") {
-    const sc = scorers();
-    h += `<div class="panel">${sc.length ? sc.map(([p,n]) => `<div class="leader"><span>${esc(p)}</span><b>${n}</b></div>`).join("") : `<div class="empty">No goals yet</div>`}</div>`;
-  }
-  $("playList").innerHTML = h;
-}
-$("playList").addEventListener("click", e => {
-  const tab = e.target.closest("[data-tab]"); if (tab) { S.playTab = tab.dataset.tab; save(); renderPlay(); return; }
-  const pk = e.target.closest("[data-pick]");
-  if (pk) { const id = pk.dataset.pick, i = S.singlePick.indexOf(id);
-    if (i >= 0) S.singlePick.splice(i,1); else { if (S.singlePick.length === 2) S.singlePick.shift(); S.singlePick.push(id); }
-    save(); renderPlay(); return; }
-  if (e.target.closest("#newGame")) {
-    const m = { id: uid(), round: 0, home: S.singlePick[0], away: S.singlePick[1], done: false, winner: null };
-    S.matches.push(m); S.singlePick = []; S.live = m.id; save(); renderPlay(); window.scrollTo(0,0); return; }
-  const mb = e.target.closest("[data-match]");
-  if (mb && !mb.disabled) { S.live = mb.dataset.match; save(); renderPlay(); window.scrollTo(0,0); }
-});
-
-/* ---------- live board ---------- */
-let armed = null, armTimer, scorerDraft = "";
-function renderLive(){
-  const m = byId(S.live); if (!m) { S.live = null; renderPlay(); return; }
-  const H = team(m.home), A = team(m.away), hs = score(m,"home"), as = score(m,"away");
-  const log = S.goals.filter(g => g.matchId === m.id).reverse();
-  const roster = [...H.players, ...A.players];
-  const ko = S.format === "knockout", tied = hs === as;
-  const nextStarted = m.next && (() => { const n = byId(m.next.id); return n.done || S.goals.some(g => g.matchId === n.id); })();
-  let h = `<button class="btn ghost" id="back" style="margin-top:0">← All games</button>
-    <div class="live-head">${S.format==="single" ? "Single game" : esc(roundName(m.round))}${m.done ? " · Final" : ""}</div>
-    <div class="scores">
-      ${[["home",H,hs],["away",A,as]].map(([s,t,n]) => `<button class="sbtn ${armed===s?"armed":""}" data-side="${s}" style="--c:${t.color}" ${m.done?"disabled":""}>
-        <span class="nm">${esc(t.name)}</span><span class="num">${n}</span><span class="tap">${m.done ? "" : armed===s ? "Tap again to confirm" : "Tap to score"}</span></button>`).join("")}
-    </div>`;
-  if (!m.done) {
-    h += `<div class="panel" style="margin-top:12px"><label class="l" for="scorer">Scorer (optional)</label>
-      <input type="text" id="scorer" list="rosterList" placeholder="Type or pick a name" autocomplete="off" value="${esc(scorerDraft)}">
-      <datalist id="rosterList">${roster.map(p => `<option value="${esc(p)}">`).join("")}</datalist>
-      <div class="hint">Pick the scorer first, then tap their team twice.</div></div>
-      <button class="btn ghost" id="undo" ${log.length?"":"disabled"}>Undo last goal</button>`;
-    if (ko && tied) {
-      h += `<div class="panel" style="margin-top:12px"><label class="l">Level. Who goes through?</label><div class="pick">
-        <button class="btn" data-adv="home" style="margin-top:0">${esc(H.name)}</button><button class="btn" data-adv="away" style="margin-top:0">${esc(A.name)}</button></div>
-        <div class="hint">Decide it however you like (penalties, next goal), then pick the winner.</div></div>`;
-    } else {
-      h += `<button class="btn" id="whistle">Final whistle</button>`;
-    }
-  } else {
-    h += (ko && nextStarted) ? `<p class="small" style="text-align:center;margin-top:12px">Locked: the next round has started.</p>`
-      : `<button class="btn ghost" id="reopen">Reopen this game</button>`;
-  }
-  h += `<div class="panel log" style="margin-top:12px"><label class="l">Goals</label>${log.length ? log.map(g =>
-    `<div class="e"><div><div class="who">${esc(g.player || "Unnamed scorer")}</div><div class="meta">${esc(tname(g.teamId))}</div></div><div class="meta">${new Date(g.ts).toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})}</div></div>`).join("") : `<div class="empty">No goals yet</div>`}</div>`;
-  $("liveBoard").innerHTML = h;
-}
-$("liveBoard").addEventListener("input", e => { if (e.target.id === "scorer") scorerDraft = e.target.value; });
-$("liveBoard").addEventListener("click", e => {
-  const m = byId(S.live);
-  if (e.target.closest("#back")) { S.live = null; armed = null; scorerDraft = ""; save(); renderPlay(); return; }
-  const sb = e.target.closest(".sbtn");
-  if (sb && !m.done) {
-    const side = sb.dataset.side; clearTimeout(armTimer);
-    if (armed === side) {
-      S.goals.push({ id: uid(), matchId: m.id, teamId: m[side], player: scorerDraft.trim(), ts: Date.now() });
-      armed = null; scorerDraft = ""; save(); renderLive(); return;
-    }
-    armed = side; renderLive(); armTimer = setTimeout(() => { armed = null; renderLive(); }, 2500); return;
-  }
-  if (e.target.closest("#undo")) {
-    for (let i = S.goals.length-1; i >= 0; i--) if (S.goals[i].matchId === m.id) { S.goals.splice(i,1); break; }
-    save(); renderLive(); return;
-  }
-  if (e.target.closest("#whistle")) {
-    const hs = score(m,"home"), as = score(m,"away");
-    finish(m, hs > as ? m.home : as > hs ? m.away : null);
-    S.live = null; save(); renderPlay(); return;
-  }
-  const adv = e.target.closest("[data-adv]");
-  if (adv) { finish(m, m[adv.dataset.adv]); S.live = null; save(); renderPlay(); return; }
-  if (e.target.closest("#reopen")) {
-    if (m.next && m.winner) { const n = byId(m.next.id); if (n[m.next.side] === m.winner) n[m.next.side] = null; }
-    m.done = false; m.winner = null; save(); renderLive(); return;
-  }
-});
-
-/* ---------- backup / reset ---------- */
-$("exportBtn").addEventListener("click", async () => {
-  const json = JSON.stringify(S);
-  try { await navigator.clipboard.writeText(json); $("exportBtn").textContent = "Copied"; setTimeout(() => $("exportBtn").textContent = "Copy backup", 2000); }
-  catch { $("exportText").hidden = false; $("exportText").value = json; $("exportText").select(); }
-});
-$("importBtn").addEventListener("click", () => { $("importBox").hidden = !$("importBox").hidden; });
-$("importGo").addEventListener("click", () => {
-  try { const d = JSON.parse($("importText").value); if (!Array.isArray(d.teams)) throw 0;
-    S = Object.assign(S, d); save(); $("importBox").hidden = true; $("importText").value = ""; render();
-  } catch { $("importText").value = ""; $("importText").placeholder = "That isn't a valid backup. Paste the whole thing."; }
-});
-let resetArmed = false, resetTimer;
-$("resetAll").addEventListener("click", () => {
-  if (!resetArmed) { resetArmed = true; $("resetAll").classList.add("armed"); $("resetAll").textContent = "Tap again: erases names, teams and results";
-    resetTimer = setTimeout(() => { resetArmed = false; $("resetAll").classList.remove("armed"); $("resetAll").textContent = "Clear everything"; }, 3000); return; }
-  clearTimeout(resetTimer); try { localStorage.removeItem(KEY); } catch(e) {} location.reload();
-});
-
-/* ---------- render ---------- */
-function render(){
-  document.querySelectorAll("#steps button").forEach(b => { b.classList.toggle("on", b.dataset.step === S.step); b.disabled = !canGo(b.dataset.step); });
-  ["players","teams","format","play"].forEach(s => $("s-"+s).hidden = S.step !== s);
-  document.querySelector(".foot").hidden = S.step === "play" && !!S.live;
-  if (S.step === "players") { renderCounts(); renderRosters(); renderToday(); }
-  if (S.step === "teams") { renderCounts(); renderTeams(); }
-  if (S.step === "format") renderFormat();
-  if (S.step === "play") renderPlay();
-}
-load(); checkIncoming(); if (!canGo(S.step)) S.step = "players"; render();
-</script>
+<p class="note">Match day saves what you enter on this device only. Nothing typed into it is shared or uploaded.</p>
 </body>
 </html>
