@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FC Westlake Central White GU12 — Fall 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#f7f9fb; --ink:#1d2a33; --muted:#5d6b75; --line:#dbe2e8; --card:#ffffff;
+  --win:#d6f0dc; --win-ink:#1f6a36;
+  --loss:#f7d9d9; --loss-ink:#8f2626;
+  --draw:#efe6d2; --draw-ink:#6e5a2c;
+  --next:#ffffff; --next-edge:#7aa6c9; --next-ink:#2c5f86;
+  --ok:#1f6a36; --warn:#8f2626; --accent:#2c5f86;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141a1f; --ink:#e7edf2; --muted:#9aa8b3; --line:#2b353d; --card:#1b232a;
+    --win:#1f3a28; --win-ink:#9fe0b0;
+    --loss:#442323; --loss-ink:#f2aaaa;
+    --draw:#3a3324; --draw-ink:#e6d3a6;
+    --next:#1b232a; --next-edge:#5b8db5; --next-ink:#a9cdea;
+    --ok:#9fe0b0; --warn:#f2aaaa; --accent:#a9cdea;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141a1f; --ink:#e7edf2; --muted:#9aa8b3; --line:#2b353d; --card:#1b232a;
+  --win:#1f3a28; --win-ink:#9fe0b0; --loss:#442323; --loss-ink:#f2aaaa;
+  --draw:#3a3324; --draw-ink:#e6d3a6; --next:#1b232a; --next-edge:#5b8db5; --next-ink:#a9cdea;
+  --ok:#9fe0b0; --warn:#f2aaaa; --accent:#a9cdea;
+}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 "Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:880px;margin:0 auto;padding:28px 18px 48px}
+h1,h2{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;line-height:1.05;margin:0}
+h1{font-size:clamp(2rem,6vw,2.9rem)}
+.sub{color:var(--muted);margin:.35rem 0 1.4rem}
+.record{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:1.6rem;font-family:"Barlow Condensed","Arial Narrow",sans-serif}
+.record div{font-size:1.05rem;color:var(--muted)}
+.record b{display:block;font-size:2.2rem;line-height:1;color:var(--ink);font-weight:700}
+h2{font-size:1.6rem;margin:2.2rem 0 .7rem}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+table{width:100%;border-collapse:collapse;min-width:640px}
+.rec{white-space:nowrap;font-variant-numeric:tabular-nums}
+.rec small{color:var(--muted);margin-left:4px}
+tr.us td{background:var(--win);font-weight:600}
+.stand td,.stand th{text-align:right}
+.stand td:nth-child(2),.stand th:nth-child(2){text-align:left}
+th,td{padding:10px 12px;text-align:left;vertical-align:middle}
+th{font-weight:600;font-size:.85rem;color:var(--muted);border-bottom:1px solid var(--line)}
+td{border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+.date{white-space:nowrap;font-variant-numeric:tabular-nums}
+.opp{font-weight:600}
+.score{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:1.35rem;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
+.tag{display:inline-block;min-width:1.7em;text-align:center;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1rem;border-radius:5px;padding:0 6px;margin-right:8px}
+tr.W{background:var(--win)}  tr.W .tag{background:var(--win-ink);color:var(--win)}
+tr.L{background:var(--loss)} tr.L .tag{background:var(--loss-ink);color:var(--loss)}
+tr.D{background:var(--draw)} tr.D .tag{background:var(--draw-ink);color:var(--draw)}
+tr.toggle td{padding:0;background:var(--card)}
+tr.toggle button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;width:100%;gap:10px;align-items:baseline;padding:12px;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.15rem;color:var(--win-ink)}
+tr.toggle button::before{content:"▸";color:var(--muted);transition:transform .15s}
+tr.toggle button[aria-expanded="true"]::before{transform:rotate(90deg)}
+tr.toggle button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+tr.toggle .smeta{font-family:"Source Sans 3",sans-serif;font-weight:400;font-size:.92rem}
+@media (prefers-reduced-motion:reduce){tr.toggle button::before{transition:none}}
+table.collapsed tr.past{display:none}
+tr.divider td{padding:14px 12px 6px;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.15rem;color:var(--next-ink);background:var(--card)}
+tr.up{background:var(--next)}
+tr.up td:first-child{box-shadow:inset 4px 0 0 var(--next-edge)}
+tr.up .score{color:var(--next-ink);font-size:1.1rem}
+.venue{color:var(--muted);font-size:.92rem}
+.repeat{display:inline-block;margin-left:6px;font-size:.78rem;font-weight:600;color:var(--warn);border:1px solid currentColor;border-radius:4px;padding:0 5px}
+.checks{display:grid;gap:10px;margin-top:.4rem}
+.verdict{padding:12px 14px;border-radius:10px;background:var(--card);border:1px solid var(--line)}
+.verdict strong{color:var(--ok)}
+.verdict.bad strong{color:var(--warn)}
+ul.teams{list-style:none;padding:0;margin:.4rem 0 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px 18px}
+ul.teams li{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed var(--line);padding:5px 0}
+.st{font-size:.88rem;color:var(--muted);white-space:nowrap}
+.st.p{color:var(--ok)} .st.s{color:var(--accent)} .st.x{color:var(--warn);font-weight:600}
+.note{color:var(--muted);font-size:.92rem;margin-top:.8rem}
+@media (max-width:520px){ main{padding:20px 12px 40px} th,td{padding:9px 9px} }
+details.scout{background:var(--card);border:1px solid var(--line);border-radius:10px;margin-bottom:10px}
+details.scout summary{cursor:pointer;padding:12px 14px;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline;list-style:none}
+details.scout summary::-webkit-details-marker{display:none}
+details.scout summary::before{content:"▸";color:var(--muted);transition:transform .15s}
+details.scout[open] summary::before{transform:rotate(90deg)}
+@media (prefers-reduced-motion:reduce){details.scout summary::before{transition:none}}
+details.scout summary:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sname{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.3rem}
+.smeta{color:var(--muted);font-size:.92rem}
+.sbody{padding:0 14px 14px}
+.sbody h3{font-size:.95rem;font-weight:600;margin:12px 0 6px;color:var(--muted)}
+.mini{width:100%;border-collapse:collapse;min-width:0}
+.mini td{padding:6px 8px;border-bottom:1px solid var(--line);font-size:.95rem}
+.mini tr:last-child td{border-bottom:0}
+.mini .tag{font-size:.85rem}
+.mini tr.W td:first-child{box-shadow:inset 3px 0 0 var(--win-ink)}
+.mini tr.L td:first-child{box-shadow:inset 3px 0 0 var(--loss-ink)}
+.mini tr.D td:first-child{box-shadow:inset 3px 0 0 var(--draw-ink)}
+.mini tr.W,.mini tr.L,.mini tr.D{background:none}
+.cmp{margin:0;padding-left:1.1em}
+.cmp li{margin:3px 0}
+a.jump{color:inherit;text-decoration:underline dotted;text-underline-offset:3px}
+.ladder{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:-.6rem 0 1.4rem;color:var(--muted);font-size:.95rem}
+.tierwrap{position:relative;display:inline-block}
+.tierchip{font:inherit;font-size:.88rem;font-weight:600;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:2px 10px}
+.tierchip.mine{border-color:var(--win-ink);color:var(--win-ink)}
+.tierchip:focus-visible,.oppbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.pop{display:none;position:absolute;z-index:5;left:0;top:calc(100% + 6px);width:min(320px,80vw);background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,.15);padding:10px 12px;color:var(--ink);font-size:.88rem;text-align:left}
+.tierwrap:hover .pop,.tierwrap.open .pop{display:block}
+.pop b{display:block;font-size:.92rem;margin-bottom:4px}
+.pop ol{margin:0;padding-left:1.3em}
+.pop li{padding:1px 0}
+.pop li span{color:var(--muted);margin-left:4px}
+.pop li.hl{font-weight:600;color:var(--accent)}
+.pop li.me{font-weight:600;color:var(--win-ink)}
+.oppbtn{all:unset;cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}
+.oppbtn::after{content:" ▾";color:var(--muted);font-size:.8em}
+.oppbtn[aria-expanded="true"]::after{content:" ▴"}
+tr.ctx td{padding:4px 8px 12px;font-size:.92rem;color:var(--muted);border-bottom:1px solid var(--line)}
+tr.ctx[hidden]{display:none}
+tr.ctx p{margin:0 0 6px}
+mark.heat{color:inherit;padding:1px 3px;margin:0 -3px;border-radius:3px;
+  background:linear-gradient(transparent 38%, rgba(255,170,0,var(--h)) 38%, rgba(255,140,0,var(--h)) 92%, transparent 92%)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) mark.heat{background:linear-gradient(transparent 38%, rgba(255,160,40,calc(var(--h)*.55)) 38%, rgba(255,120,30,calc(var(--h)*.55)) 92%, transparent 92%)}}
+:root[data-theme="dark"] mark.heat{background:linear-gradient(transparent 38%, rgba(255,160,40,calc(var(--h)*.55)) 38%, rgba(255,120,30,calc(var(--h)*.55)) 92%, transparent 92%)}
+</style>
+</head>
+<body>
+<main>
+  <h1>FC Westlake Central White GU12</h1>
+  <p class="sub">STXCL Western Conference 2026–27, Girls U12 Bracket C (Tier 3). Results from GotSport as of Sep 30, 2026.</p>
+  <div class="ladder" id="ladder"></div>
+  <div class="record" id="record"></div>
+
+  <div class="scroll">
+    <table id="season" class="collapsed">
+      <thead><tr><th>Date</th><th>Opponent</th><th>Their record</th><th>Score / kickoff</th><th>Venue</th></tr></thead>
+      <tbody id="grid"></tbody>
+    </table>
+  </div>
+
+  <h2>Tournaments</h2>
+  <div id="tournaments"></div>
+
+  <h2>Upcoming</h2>
+  <div id="scouting"></div>
+
+  <h2>Bracket C standings</h2>
+  <div class="scroll">
+    <table class="stand">
+      <thead><tr><th>#</th><th>Team</th><th>MP</th><th>W</th><th>L</th><th>D</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th></tr></thead>
+      <tbody id="standings"></tbody>
+    </table>
+  </div>
+
+</main>
+
+<script>
+const US = "FC Westlake Central White";
+const strip = s => s.replace(/\s*STXCL WC GU12.*$/,"").trim();
+const key = s => strip(s).toLowerCase();
+const same = (a,b) => key(a)===key(b);
+
+// Every Bracket C match played so far (GotSport, as of Sep 30 2026). hs/as = null means no score reported.
+const results = [
+  ["2026-09-12","BLACK LIONS FC LIONESSES",1,2,"LTFC Red"],
+  ["2026-09-12","FC Westlake Central Blue",2,2,"DS Stars"],
+  ["2026-09-12","SA City SC Blue",0,4,"Castroville United"],
+  ["2026-09-13","LIONS FC",1,0,"DS Stars"],
+  ["2026-09-13","Coyotes FC White",0,4,"LTFC Red"],
+  ["2026-09-13","FC Westlake Central Blue",4,3,"CTX Soccer Academy Spark"],
+  ["2026-09-13","SA City SC Blue",0,6,"FC Westlake Central White"],
+  ["2026-09-13","Pflugerville FC Green",1,1,"BLACK LIONS FC LIONESSES"],
+  ["2026-09-19","FC Westlake Central White",1,0,"FC Westlake Central Blue"],
+  ["2026-09-19","LIONS FC",7,0,"CTX Soccer Academy Spark"],
+  ["2026-09-19","DS Stars",6,0,"SA City SC Blue"],
+  ["2026-09-20","CTX Soccer Academy Spark",0,2,"Castroville United"],
+  ["2026-09-20","Coyotes FC White",0,5,"FC Westlake Central White"],
+  ["2026-09-26","Pflugerville FC Green",1,1,"DS Stars"],
+  ["2026-09-26","FC Westlake Central Blue",1,0,"LIONS FC"],
+  ["2026-09-26","LTFC Red",11,0,"CTX Soccer Academy Spark"],
+  ["2026-09-26","Coyotes FC White",0,3,"Castroville United"],
+  ["2026-09-27","BLACK LIONS FC LIONESSES",1,6,"FC Westlake Central White"],
+  ["2026-09-27","Castroville United",0,3,"LIONS FC"],
+  ["2026-09-27","Coyotes FC White",null,null,"Pflugerville FC Green"],
+].map(([date,home,hs,as,away])=>({date,home,hs,as,away}));
+
+const upcoming = [
+  {date:"2026-10-04", time:"8:30 AM", opp:"Pflugerville FC Green", venue:"St Francis School, Field 1B"},
+  {date:"2026-10-18", time:"10:00 AM", opp:"CTX Soccer Academy Spark", venue:"St Francis School, Field 1B"},
+  {date:"2026-10-25", time:"10:00 AM", opp:"LTFC Red", venue:"Bridge Point, Field 1"},
+  {date:"2026-10-31", time:"8:30 AM", opp:"DS Stars", venue:"St Francis School, Field 1A"},
+  {date:"2026-11-01", time:"1:00 PM", opp:"LIONS FC", venue:"Bridge Point, Field 1"},
+  {date:"2026-11-08", time:"3:30 PM", opp:"Castroville United", venue:"Lions Park, Field 1"},
+];
+const bracket = [
+  "BLACK LIONS FC LIONESSES","Castroville United","Coyotes FC White","CTX Soccer Academy Spark",
+  "DS Stars","FC Westlake Central Blue","FC Westlake Central White","LIONS FC","LTFC Red",
+  "Pflugerville FC Green","SA City SC Blue"
+];
+
+const fmt = d => new Date(d+"T12:00:00").toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});
+const fmtS = d => new Date(d+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric"});
+const esc = s => s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const slug = s => key(s).replace(/[^a-z0-9]+/g,"-");
+const ord = n => n+(["th","st","nd","rd"][(n%100>10&&n%100<14)?0:n%10]||"th");
+const res = (f,a) => f>a?"W":f<a?"L":"D";
+
+// A team's games from its own perspective
+const gamesOf = team => results.filter(m=>same(m.home,team)||same(m.away,team)).map(m=>{
+  const home = same(m.home,team);
+  return {date:m.date, opp: home?m.away:m.home, f: home?m.hs:m.as, a: home?m.as:m.hs};
+});
+const scored = g => g.f!==null;
+
+// Standings computed from results
+const table = bracket.map(t=>{
+  const g = gamesOf(t).filter(scored);
+  const w=g.filter(x=>x.f>x.a).length, l=g.filter(x=>x.f<x.a).length, d=g.filter(x=>x.f===x.a).length;
+  const gf=g.reduce((s,x)=>s+x.f,0), ga=g.reduce((s,x)=>s+x.a,0);
+  return {team:t, mp:g.length, w,l,d,gf,ga,gd:gf-ga,pts:w*3+d};
+}).sort((a,b)=>b.pts-a.pts||b.gd-a.gd||b.gf-a.gf);
+const pos = t => table.findIndex(r=>same(r.team,t))+1;
+const rowOf = t => table.find(r=>same(r.team,t));
+const recTd = t => { const r=rowOf(t); return r?`<td class="rec">${r.w}-${r.l}-${r.d}<small>${ord(pos(t))}</small></td>`:"<td class=\"rec\">—</td>"; };
+
+// Main grid
+const ours = gamesOf(US).filter(scored).sort((a,b)=>a.date.localeCompare(b.date));
+const playedKeys = new Set(ours.map(g=>key(g.opp)));
+let rows = `<tr class="toggle"><td colspan="5"><button type="button" id="pastToggle" aria-expanded="false">Results <span class="smeta">${ours.length} played, ${ours.filter(g=>g.f>g.a).length}-${ours.filter(g=>g.f<g.a).length}-${ours.filter(g=>g.f===g.a).length}. Show games</span></button></td></tr>`;
+rows += ours.map(g=>{ const r=res(g.f,g.a);
+  return `<tr class="${r} past"><td class="date">${fmt(g.date)}</td><td class="opp">${esc(g.opp)}</td>${recTd(g.opp)}
+    <td class="score"><span class="tag">${r}</span>${g.f}–${g.a}</td><td class="venue">—</td></tr>`; }).join("");
+rows += `<tr class="divider"><td colspan="5">Upcoming</td></tr>`;
+// Highlight strength from opponent points per game (0–3), eased so strong teams stand out
+const heat = t => { const r=rowOf(t); if(!r||!r.mp) return 0; const ppg=r.pts/r.mp; return Math.pow(Math.min(ppg,3)/3,1.5); };
+rows += upcoming.map(g=>{
+  const rep = playedKeys.has(key(g.opp)) ? `<span class="repeat">Rematch</span>` : "";
+  return `<tr class="up"><td class="date">${fmt(g.date)}</td><td class="opp"><a class="jump" href="#scout-${slug(g.opp)}" title="${(()=>{const r=rowOf(g.opp);return r&&r.mp?(r.pts/r.mp).toFixed(2)+" points per game":"No games yet"})()}"><mark class="heat" style="--h:${heat(g.opp).toFixed(2)}">${esc(g.opp)}</mark></a>${rep}</td>${recTd(g.opp)}
+    <td class="score">${g.time}</td><td class="venue">${esc(g.venue)}</td></tr>`; }).join("");
+document.getElementById("grid").innerHTML = rows;
+document.getElementById("pastToggle").addEventListener("click",e=>{
+  const b=e.currentTarget, open=b.getAttribute("aria-expanded")!=="true";
+  b.setAttribute("aria-expanded",open);
+  document.getElementById("season").classList.toggle("collapsed",!open);
+  b.querySelector(".smeta").textContent=b.querySelector(".smeta").textContent.replace(open?"Show games":"Hide games",open?"Hide games":"Show games");
+});
+
+// Record strip
+const me = rowOf(US);
+document.getElementById("record").innerHTML =
+  `<div><b>${me.w}-${me.l}-${me.d}</b>W-L-D</div><div><b>${ord(pos(US))}</b>In bracket</div><div><b>${me.gf}–${me.ga}</b>Goals for–against</div><div><b>${upcoming.length}</b>Games left</div>`;
+
+// Scouting
+const ourVs = t => ours.find(g=>same(g.opp,t));
+document.getElementById("scouting").innerHTML = upcoming.map((u,i)=>{
+  const t=u.opp, r=rowOf(t), g=gamesOf(t).sort((a,b)=>a.date.localeCompare(b.date));
+  const list = g.map(x=>{
+    if(!scored(x)) return `<tr><td>${fmtS(x.date)}</td><td>vs ${esc(x.opp)}</td><td class="smeta">No score reported</td></tr>`;
+    const rr=res(x.f,x.a);
+    return `<tr class="${rr}"><td>${fmtS(x.date)}</td><td>vs ${esc(x.opp)} <span class="smeta">(${ord(pos(x.opp))})</span></td><td class="score"><span class="tag" style="background:var(--${rr==="W"?"win":rr==="L"?"loss":"draw"}-ink);color:var(--card)">${rr}</span>${x.f}–${x.a}</td></tr>`;
+  }).join("");
+  const common = g.filter(x=>scored(x)&&!same(x.opp,US)&&ourVs(x.opp)).map(x=>{
+    const o=ourVs(x.opp);
+    const v=(f,a)=>f>a?"won":f<a?"lost":"drew";
+    return `<li>${esc(x.opp)}: we ${v(o.f,o.a)} ${o.f}–${o.a}; they ${v(x.f,x.a)} ${x.f}–${x.a}.</li>`;
+  }).join("");
+  return `<details class="scout" id="scout-${slug(t)}"${i===0?" open":""}>
+    <summary><span class="sname">${esc(t)}</span><span class="smeta">${fmt(u.date)}, ${u.time}. ${r.w}-${r.l}-${r.d}, ${ord(pos(t))}, GF ${r.gf} GA ${r.ga}</span></summary>
+    <div class="sbody">
+      <h3>Their results</h3>
+      ${g.length?`<table class="mini"><tbody>${list}</tbody></table>`:`<p class="smeta">No games played yet.</p>`}
+      <h3>Common opponents</h3>
+      ${common?`<ul class="cmp">${common}</ul>`:`<p class="smeta">None yet.</p>`}
+    </div></details>`;
+}).join("");
+document.querySelectorAll("a.jump").forEach(a=>a.addEventListener("click",()=>{
+  const d=document.querySelector(a.getAttribute("href")); if(d) d.open=true; }));
+
+// League tiers (GotSport, Sep 30 2026). [team, W-L-D] in standings order.
+const tiers = {
+  "WC-A": {conf:"STXCL Western Conference", name:"Girls U12 Bracket A", tier:"Tier 1 of 3", teams:[
+    ["Lonestar ATX Red STH","4-0-0"],["Lonestar SAT Red","4-0-1"],["FC Westlake Elite North White","2-0-1"],["Lonestar ATX Red NW A","2-0-1"],
+    ["Lonestar ATX Red NW B","2-2-0"],["SA City SC Red","1-1-1"],["Premier FA","1-2-1"],["Lonestar SAT Royal","1-4-1"],
+    ["Lonestar ATX Red NW C","1-4-0"],["Sting CC Clitnovici","0-1-0"],["Lonestar ATX Royal NTH","0-4-0"]]},
+  "WC-B": {conf:"STXCL Western Conference", name:"Girls U12 Bracket B", tier:"Tier 2 of 3", teams:[
+    ["LTFC Premier II","3-0-1"],["FC Westlake Elite Central White","2-1-0"],["TC Premier SC","2-1-0"],["Lonestar ATX Royal STH","2-1-1"],
+    ["Coyotes FC Navy","1-0-2"],["FC Westlake North","1-1-0"],["Lonestar ATX Gold NTH","1-1-0"],["SA United Platinum","1-2-0"],
+    ["Lonestar ATX White NTH","1-2-0"],["HC United Walther","0-2-0"],["Lonestar ATX Silver NTH","0-3-0"]]},
+  "WC-C": {conf:"STXCL Western Conference", name:"Girls U12 Bracket C", tier:"Tier 3 of 3", teams:null}, // filled from live table
+  "EC-U11-D": {conf:"STXCL Eastern Conference", name:"Girls U11 Bracket D", tier:"Bracket D of 4", teams:[
+    ["Challenge Aggieland White","3-0-0"],["Coastal Premier II","2-0-1"],["AHFC West Premier II","2-1-0"],["HTX South White","2-1-0"],
+    ["HTX Sienna Gold","1-0-2"],["AHFC SW Blue","1-1-1"],["Challenge East Red","1-2-0"],["Kaptiva Sports Academy TX Purple","0-2-1"],
+    ["RISE SC Nike Volt GU10","0-2-1"],["Dynamos","0-3-0"]]},
+};
+tiers["WC-C"].teams = table.map(r=>[strip(r.team), `${r.w}-${r.l}-${r.d}`]);
+const norm = s => s.toLowerCase().replace(/[^a-z0-9]/g,"");
+const tierChip = (k, highlight, mine) => {
+  const t=tiers[k];
+  const items=t.teams.map(([n,rec])=>{
+    const cls = norm(n)===norm(strip(US)) ? "me" : (highlight && norm(n)===norm(highlight) ? "hl" : "");
+    return `<li class="${cls}">${esc(n)}<span>${rec}</span></li>`;}).join("");
+  return `<span class="tierwrap"><button type="button" class="tierchip${mine?" mine":""}" aria-expanded="false">${esc(t.name.replace("Girls ",""))}, ${t.tier}</button>
+    <span class="pop" role="tooltip"><b>${esc(t.conf)}: ${esc(t.name)}</b><ol>${items}</ol></span></span>`;
+};
+document.getElementById("ladder").innerHTML = `League tiers:` +
+  ["WC-A","WC-B","WC-C"].map(k=>tierChip(k,null,k==="WC-C")).join("");
+
+// Tournaments (PlayMetrics). Scores ours first. tier: key into tiers, or null with a note.
+const tournaments = [
+  {name:"Austin Labor Day Cup", dates:"Sep 5–7, 2026", division:"U12G Bronze A, Group B", finish:"Finalist, 1st in group",
+   games:[
+    {date:"2026-09-05", round:"Group", opp:"Boerne Soccer Club 2014/15G Red", f:2, a:0,
+      tier:null, note:"Not in any STXCL Western Conference Girls U12 bracket. Likely plays in a different league."},
+    {date:"2026-09-05", round:"Group", opp:"AHFC U11G Premier 2 W (Albion Hurricanes)", f:5, a:0,
+      tier:"EC-U11-D", as:"AHFC West Premier II", note:"Houston club, one age group down. Listed in STXCL as AHFC West Premier II."},
+    {date:"2026-09-06", round:"Group", opp:"Force FC 15/14G White (Georgetown SA)", f:2, a:2,
+      tier:null, note:"Not in any STXCL Western Conference Girls U12 bracket. Likely plays in a different league."},
+    {date:"2026-09-07", round:"Final", opp:"Lonestar ATX Royal STH STXCL-WC GU12", f:1, a:3,
+      tier:"WC-B", as:"Lonestar ATX Royal STH", note:"One tier above us."},
+   ]},
+];
+document.getElementById("tournaments").innerHTML = tournaments.map(t=>{
+  const w=t.games.filter(g=>g.f>g.a).length, l=t.games.filter(g=>g.f<g.a).length, d=t.games.filter(g=>g.f===g.a).length;
+  const gf=t.games.reduce((s,g)=>s+g.f,0), ga=t.games.reduce((s,g)=>s+g.a,0);
+  const rows=t.games.map((g,gi)=>{const r=res(g.f,g.a), id=`ctx-${slug(t.name)}-${gi}`;
+    let ctx;
+    if(g.tier){ const tt=tiers[g.tier], i=tt.teams.findIndex(x=>norm(x[0])===norm(g.as));
+      const line = i>=0 ? `${tt.teams[i][1]}, ${ord(i+1)} of ${tt.teams.length}` : "";
+      ctx = `<p>${esc(tt.conf)}, ${esc(tt.name)}${line?`: ${line}`:""}. ${esc(g.note)}</p>${tierChip(g.tier,g.as,false)}`;
+    } else ctx = `<p>${esc(g.note)}</p>`;
+    return `<tr class="${r}"><td>${fmtS(g.date)}</td><td>${g.round}</td><td><button type="button" class="oppbtn" aria-expanded="false" aria-controls="${id}">vs ${esc(g.opp)}</button></td><td class="score"><span class="tag" style="background:var(--${r==="W"?"win":r==="L"?"loss":"draw"}-ink);color:var(--card)">${r}</span>${g.f}–${g.a}</td></tr>
+      <tr class="ctx" id="${id}" hidden><td colspan="4">${ctx}</td></tr>`;}).join("");
+  return `<details class="scout"><summary><span class="sname">${esc(t.name)}</span><span class="smeta">${t.dates}. ${esc(t.finish)}. ${w}-${l}-${d}, ${gf}–${ga}</span></summary>
+    <div class="sbody"><h3>${esc(t.division)}</h3><table class="mini"><tbody>${rows}</tbody></table></div></details>`;
+}).join("");
+
+document.addEventListener("click",e=>{
+  const ob=e.target.closest(".oppbtn");
+  if(ob){ const open=ob.getAttribute("aria-expanded")!=="true"; ob.setAttribute("aria-expanded",open);
+    document.getElementById(ob.getAttribute("aria-controls")).hidden=!open; return; }
+  const chip=e.target.closest(".tierchip");
+  document.querySelectorAll(".tierwrap.open").forEach(w=>{ if(!chip||w!==chip.parentElement){w.classList.remove("open");w.querySelector(".tierchip").setAttribute("aria-expanded","false");}});
+  if(chip){ const w=chip.parentElement, open=!w.classList.contains("open"); w.classList.toggle("open",open); chip.setAttribute("aria-expanded",open); }
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") document.querySelectorAll(".tierwrap.open").forEach(w=>w.classList.remove("open")); });
+
+// Standings
+document.getElementById("standings").innerHTML = table.map((r,i)=>
+  `<tr class="${same(r.team,US)?"us":""}"><td>${i+1}</td><td>${esc(r.team)}</td><td>${r.mp}</td><td>${r.w}</td><td>${r.l}</td><td>${r.d}</td><td>${r.gf}</td><td>${r.ga}</td><td>${r.gd>0?"+":""}${r.gd}</td><td>${r.pts}</td></tr>`).join("");
+
+</script>
+</body>
+</html>

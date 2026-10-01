@@ -131,6 +131,14 @@ a.jump{color:inherit;text-decoration:underline dotted;text-underline-offset:3px}
 tr.ctx td{padding:4px 8px 12px;font-size:.92rem;color:var(--muted);border-bottom:1px solid var(--line)}
 tr.ctx[hidden]{display:none}
 tr.ctx p{margin:0 0 6px}
+mark.heat{color:inherit;padding:1px 3px;margin:0 -3px;border-radius:3px;
+  background:linear-gradient(transparent 38%, rgba(255,170,0,var(--h)) 38%, rgba(255,140,0,var(--h)) 92%, transparent 92%)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) mark.heat{background:linear-gradient(transparent 38%, rgba(255,160,40,calc(var(--h)*.55)) 38%, rgba(255,120,30,calc(var(--h)*.55)) 92%, transparent 92%)}}
+:root[data-theme="dark"] mark.heat{background:linear-gradient(transparent 38%, rgba(255,160,40,calc(var(--h)*.55)) 38%, rgba(255,120,30,calc(var(--h)*.55)) 92%, transparent 92%)}
+.edge{font-weight:600}
+.e-g{color:#1f6a36}.e-y{color:#9a6b00}.e-o{color:#c2570c}.e-r{color:#b42318}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .e-g{color:#8fdca5}:root:not([data-theme="light"]) .e-y{color:#f2cf5b}:root:not([data-theme="light"]) .e-o{color:#ffa45c}:root:not([data-theme="light"]) .e-r{color:#ff8a80}}
+:root[data-theme="dark"] .e-g{color:#8fdca5}:root[data-theme="dark"] .e-y{color:#f2cf5b}:root[data-theme="dark"] .e-o{color:#ffa45c}:root[data-theme="dark"] .e-r{color:#ff8a80}
 </style>
 </head>
 <body>
@@ -161,10 +169,6 @@ tr.ctx p{margin:0 0 6px}
     </table>
   </div>
 
-  <h2>Bracket check</h2>
-  <div class="checks" id="checks"></div>
-  <ul class="teams" id="teams"></ul>
-  <p class="note">LIONS FC and Black Lions FC Lionesses are two separate teams in this bracket, not a repeat.</p>
 </main>
 
 <script>
@@ -244,9 +248,11 @@ rows += ours.map(g=>{ const r=res(g.f,g.a);
   return `<tr class="${r} past"><td class="date">${fmt(g.date)}</td><td class="opp">${esc(g.opp)}</td>${recTd(g.opp)}
     <td class="score"><span class="tag">${r}</span>${g.f}–${g.a}</td><td class="venue">—</td></tr>`; }).join("");
 rows += `<tr class="divider"><td colspan="5">Upcoming</td></tr>`;
+// Highlight strength from opponent points per game (0–3), eased so strong teams stand out
+const heat = t => { const r=rowOf(t); if(!r||!r.mp) return 0; const ppg=r.pts/r.mp; return Math.pow(Math.min(ppg,3)/3,1.5); };
 rows += upcoming.map(g=>{
   const rep = playedKeys.has(key(g.opp)) ? `<span class="repeat">Rematch</span>` : "";
-  return `<tr class="up"><td class="date">${fmt(g.date)}</td><td class="opp"><a class="jump" href="#scout-${slug(g.opp)}">${esc(g.opp)}</a>${rep}</td>${recTd(g.opp)}
+  return `<tr class="up"><td class="date">${fmt(g.date)}</td><td class="opp"><a class="jump" href="#scout-${slug(g.opp)}" title="${(()=>{const r=rowOf(g.opp);return r&&r.mp?(r.pts/r.mp).toFixed(2)+" points per game":"No games yet"})()}"><mark class="heat" style="--h:${heat(g.opp).toFixed(2)}">${esc(g.opp)}</mark></a>${rep}</td>${recTd(g.opp)}
     <td class="score">${g.time}</td><td class="venue">${esc(g.venue)}</td></tr>`; }).join("");
 document.getElementById("grid").innerHTML = rows;
 document.getElementById("pastToggle").addEventListener("click",e=>{
@@ -272,7 +278,12 @@ document.getElementById("scouting").innerHTML = upcoming.map((u,i)=>{
   }).join("");
   const common = g.filter(x=>scored(x)&&!same(x.opp,US)&&ourVs(x.opp)).map(x=>{
     const o=ourVs(x.opp);
-    return `<li>${esc(x.opp)}: you won ${o.f}–${o.a}; they ${x.f>x.a?"won":x.f<x.a?"lost":"drew"} ${x.f}–${x.a}.</li>`;
+    const v=(f,a)=>f>a?"won":f<a?"lost":"drew";
+    // Edge = our goal difference vs theirs against the same team
+    const edge=(o.f-o.a)-(x.f-x.a);
+    const cls=edge>=3?"e-g":edge>=1?"e-y":edge>=-1?"e-o":"e-r";
+    const tip=edge===0?"Even against this opponent":`${Math.abs(edge)}-goal edge to ${edge>0?"us":"them"} against this opponent`;
+    return `<li>${esc(x.opp)}: <span class="edge ${cls}" title="${tip}">We ${v(o.f,o.a)} ${o.f}–${o.a}; they ${v(x.f,x.a)} ${x.f}–${x.a}.</span></li>`;
   }).join("");
   return `<details class="scout" id="scout-${slug(t)}"${i===0?" open":""}>
     <summary><span class="sname">${esc(t)}</span><span class="smeta">${fmt(u.date)}, ${u.time}. ${r.w}-${r.l}-${r.d}, ${ord(pos(t))}, GF ${r.gf} GA ${r.ga}</span></summary>
@@ -326,7 +337,7 @@ const tournaments = [
     {date:"2026-09-06", round:"Group", opp:"Force FC 15/14G White (Georgetown SA)", f:2, a:2,
       tier:null, note:"Not in any STXCL Western Conference Girls U12 bracket. Likely plays in a different league."},
     {date:"2026-09-07", round:"Final", opp:"Lonestar ATX Royal STH STXCL-WC GU12", f:1, a:3,
-      tier:"WC-B", as:"Lonestar ATX Royal STH", note:"One tier above you."},
+      tier:"WC-B", as:"Lonestar ATX Royal STH", note:"One tier above us."},
    ]},
 ];
 document.getElementById("tournaments").innerHTML = tournaments.map(t=>{
@@ -358,19 +369,6 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape") document.querySele
 document.getElementById("standings").innerHTML = table.map((r,i)=>
   `<tr class="${same(r.team,US)?"us":""}"><td>${i+1}</td><td>${esc(r.team)}</td><td>${r.mp}</td><td>${r.w}</td><td>${r.l}</td><td>${r.d}</td><td>${r.gf}</td><td>${r.ga}</td><td>${r.gd>0?"+":""}${r.gd}</td><td>${r.pts}</td></tr>`).join("");
 
-// Bracket check
-const upKeys = upcoming.map(g=>key(g.opp));
-const opponents = bracket.filter(t=>!same(t,US));
-const missing = opponents.filter(t=>!playedKeys.has(key(t)) && !upKeys.includes(key(t)));
-const repeats = opponents.filter(t=>(playedKeys.has(key(t))?1:0)+upKeys.filter(k=>k===key(t)).length>1);
-const verdict = (ok,a,b)=>`<div class="verdict${ok?"":" bad"}"><strong>${ok?"✓":"!"}</strong> ${ok?a:b}</div>`;
-document.getElementById("checks").innerHTML =
-  verdict(!missing.length,`All ${opponents.length} bracket opponents are on the schedule: ${ours.length} played, ${upcoming.length} to go.`,`Not on the schedule yet: ${missing.map(esc).join(", ")}.`)+
-  verdict(!repeats.length,"No team appears twice. Every remaining game is a first meeting.",`Faced more than once: ${repeats.map(esc).join(", ")}.`);
-document.getElementById("teams").innerHTML = opponents.map(t=>{
-  const p=ourVs(t), u=upcoming.find(g=>same(g.opp,t));
-  const st=p?`<span class="st p">${res(p.f,p.a)} ${p.f}–${p.a}</span>`:u?`<span class="st s">${fmt(u.date)}</span>`:`<span class="st x">Not scheduled</span>`;
-  return `<li><span>${esc(t)}</span>${st}</li>`;}).join("");
 </script>
 </body>
 </html>
