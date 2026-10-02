@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>FC Westlake Elite Central White GU12 — Fall 2026</title>
+<title>FC Westlake GU11 Dortmund — Fall 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
@@ -79,6 +79,8 @@ tr.up{background:var(--next)}
 tr.up td:first-child{box-shadow:inset 4px 0 0 var(--next-edge)}
 tr.up .score{color:var(--next-ink);font-size:1.1rem}
 .venue{color:var(--muted);font-size:.92rem}
+.kit{font-size:.82rem;margin-top:2px}
+.resched{display:inline-block;margin-left:6px;font-size:.75rem;font-weight:600;color:var(--accent);border:1px solid currentColor;border-radius:4px;padding:0 5px}
 .repeat{display:inline-block;margin-left:6px;font-size:.78rem;font-weight:600;color:var(--warn);border:1px solid currentColor;border-radius:4px;padding:0 5px}
 .checks{display:grid;gap:10px;margin-top:.4rem}
 .verdict{padding:12px 14px;border-radius:10px;background:var(--card);border:1px solid var(--line)}
@@ -141,9 +143,9 @@ mark.heat{color:inherit;padding:1px 3px;margin:0 -3px;border-radius:3px;
 :root[data-theme="dark"] .e-g{color:#8fdca5}:root[data-theme="dark"] .e-y{color:#f2cf5b}:root[data-theme="dark"] .e-o{color:#ffa45c}:root[data-theme="dark"] .e-r{color:#ff8a80}
 
 /* Team identity: one color per team, used for the header band, our standings row and our bracket chip */
-:root{--team:#13284b;--team-ink:#e8b931;--team-sub:rgba(241,230,196,.85);--team-stripe:#e8b931;--team-soft:#f6edcf;--team-accent:#8a6a00}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--team-soft:#3a321a;--team-accent:#e8b931}}
-:root[data-theme="dark"]{--team-soft:#3a321a;--team-accent:#e8b931}
+:root{--team:#fde100;--team-ink:#000000;--team-sub:rgba(0,0,0,.72);--team-stripe:#000000;--team-soft:#fff6b3;--team-accent:#000000}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--team-soft:#3a3510;--team-accent:#fde100}}
+:root[data-theme="dark"]{--team-soft:#3a3510;--team-accent:#fde100}
 .band{background:var(--team);color:var(--team-ink);border-radius:12px;padding:18px 20px 16px;margin-bottom:1.6rem;border-bottom:6px solid var(--team-stripe)}
 .band h1{color:var(--team-ink)}
 .band .sub{color:var(--team-sub);margin:.4rem 0 0}
@@ -158,8 +160,8 @@ tr.us td{background:var(--team-soft)}
 <main>
   <a class="back" href="../">&larr; Soccer hub</a>
   <header class="band">
-    <h1>FC Westlake Elite Central White GU12</h1>
-    <p class="sub">Pre-ECNL squad. STXCL Western Conference 2026–27, Girls U12 Bracket B (Tier 2). League results from GotSport as of Oct 2, 2026.</p>
+    <h1>FC Westlake GU11 Dortmund</h1>
+    <p class="sub">CTX Premier League, Fall 2026. GU11 CTX I, Bracket B (Premier I). Results from PlayMetrics as of Oct 2, 2026.</p>
   </header>
   <div class="ladder" id="ladder"></div>
   <div class="record" id="record"></div>
@@ -171,8 +173,10 @@ tr.us td{background:var(--team-soft)}
     </table>
   </div>
 
+  <section id="tourneySec" hidden>
   <h2>Tournaments</h2>
   <div id="tournaments"></div>
+  </section>
 
   <h2>Upcoming</h2>
   <div id="scouting"></div>
@@ -188,45 +192,45 @@ tr.us td{background:var(--team-soft)}
 </main>
 
 <script>
-const US = "FC Westlake Elite Central White";
+const US = "FC Westlake GU11 Dortmund";
 const strip = s => s.replace(/\s*STXCL[- ]WC GU12.*$/,"").trim();
 const key = s => strip(s).toLowerCase();
 const same = (a,b) => key(a)===key(b);
 
-// Every Bracket B match played so far (GotSport, as of Oct 2 2026). Scores home–away.
+// Every GU11 CTX I Bracket B match played so far (PlayMetrics, as of Oct 2 2026). Scores home–away.
 const results = [
-  ["2026-09-12","FC Westlake Elite Central White",7,0,"Lonestar ATX Silver NTH"],
-  ["2026-09-12","Lonestar ATX Gold NTH",2,1,"HC United Walther"],
-  ["2026-09-12","SA United Platinum",0,5,"LTFC Premier II"],
-  ["2026-09-12","Coyotes FC Navy",0,0,"Lonestar ATX Royal STH"],
-  ["2026-09-13","FC Westlake North",1,3,"LTFC Premier II"],
-  ["2026-09-13","SA United Platinum",3,1,"Lonestar ATX Royal STH"],
-  ["2026-09-18","Lonestar ATX White NTH",0,8,"TC PREMIER SC"],
-  ["2026-09-19","LTFC Premier II",2,1,"FC Westlake Elite Central White"],
-  ["2026-09-19","TC PREMIER SC",3,1,"SA United Platinum"],
-  ["2026-09-20","Lonestar ATX Silver NTH",0,8,"FC Westlake North"],
-  ["2026-09-20","Coyotes FC Navy",3,1,"Lonestar ATX Gold NTH"],
-  ["2026-09-20","Lonestar ATX Royal STH",3,1,"Lonestar ATX White NTH"],
-  ["2026-09-25","Lonestar ATX White NTH",1,0,"Lonestar ATX Silver NTH"],
-  ["2026-09-26","HC United Walther",0,4,"Lonestar ATX Royal STH"],
-  ["2026-09-26","Coyotes FC Navy",2,2,"LTFC Premier II"],
-  ["2026-09-27","FC Westlake Elite Central White",4,0,"TC PREMIER SC"],
+  ["2026-09-12","DS Stars GU10 Maroon",0,3,"LTFC U11G White"],
+  ["2026-09-12","FC Westlake GU11 Liverpool",5,3,"GalaxySC CTXPL GU10 Black"],
+  ["2026-09-12","FC Westlake GU11 Dortmund",3,0,"LTFC GU10 Premier II"],
+  ["2026-09-13","Pflugerville FC GU11 Blue",10,1,"Lonestar ATX GU11 Rattlers NTH"],
+  ["2026-09-13","FC Westlake GU11 Liverpool",1,5,"DS Stars GU11 Silver"],
+  ["2026-09-19","DS Stars GU10 Maroon",1,2,"LTFC GU10 Premier II"],
+  ["2026-09-19","LTFC U11G White",1,1,"FC Westlake GU11 Liverpool"],
+  ["2026-09-19","TC Academy GU11 Blue",0,2,"FC Westlake GU11 Dortmund"],
+  ["2026-09-20","FC Westlake GU11 Liverpool",2,0,"TC Academy GU11 Blue"],
+  ["2026-09-20","GalaxySC CTXPL GU10 Black",2,2,"Pflugerville FC GU11 Blue"],
+  ["2026-09-26","TC Academy GU11 Blue",1,0,"GalaxySC CTXPL GU10 Black"],
+  ["2026-09-26","LTFC GU10 Premier II",4,0,"Lonestar ATX GU11 Rattlers NTH"],
+  ["2026-09-27","FC Westlake GU11 Dortmund",7,2,"LTFC U11G White"],
+  ["2026-09-27","Pflugerville FC GU11 Blue",3,2,"DS Stars GU10 Maroon"],
+  ["2026-09-27","LTFC GU10 Premier II",3,0,"FC Westlake GU11 Liverpool"],
 ].map(([date,home,hs,as,away])=>({date,home,hs,as,away}));
 
+// kit: away = all navy (bring white/gold); home = white/gold (bring navy)
+const AWAY_KIT="All navy, bring white/gold", HOME_KIT="White/gold, bring navy";
 const upcoming = [
-  {date:"2026-10-03", time:"11:30 AM", opp:"FC Westlake North", venue:"Bridge Point, Field 1"},
-  {date:"2026-10-17", time:"11:00 AM", opp:"Lonestar ATX White NTH", venue:"Westcreek, Field 3W"},
-  {date:"2026-10-18", time:"1:00 PM", opp:"Lonestar ATX Royal STH", venue:"Westcreek, Field 4W",
-    note:"Beat FC Westlake Central White 3–1 in the Labor Day Cup final (U12G Bronze A)."},
-  {date:"2026-10-24", time:"2:30 PM", opp:"SA United Platinum", venue:"Bridge Point, Field 1"},
-  {date:"2026-10-31", time:"11:00 AM", opp:"Lonestar ATX Gold NTH", venue:"Westcreek, Field 4E"},
-  {date:"2026-11-07", time:"2:30 PM", opp:"Coyotes FC Navy", venue:"St Francis School, Field 1B"},
-  {date:"2026-11-21", time:"1:00 PM", opp:"HC United Walther", venue:"St Francis School, Field 1B"},
+  {date:"2026-10-04", time:"11:00 AM", opp:"Lonestar ATX GU11 Rattlers NTH", venue:"Westcreek, Field 3 East", kit:AWAY_KIT},
+  {date:"2026-10-10", time:"2:30 PM", opp:"Pflugerville FC GU11 Blue", venue:"Wells Point Park 1 (9v9)", kit:AWAY_KIT, status:"Rescheduled"},
+  {date:"2026-10-11", time:"9:00 AM", opp:"DS Stars GU11 Silver", venue:"DSYSA Sports & Rec Park 12-1", kit:AWAY_KIT},
+  {date:"2026-10-17", time:"4:00 PM", opp:"GalaxySC CTXPL GU10 Black", venue:"Clay Madsen Soccer Fields 1 A", kit:AWAY_KIT},
+  {date:"2026-10-18", time:"5:00 PM", opp:"LTFC GU10 Premier II", venue:"Bee Creek Sports Complex, Field 4 B", kit:AWAY_KIT},
+  {date:"2026-10-25", time:"11:30 AM", opp:"FC Westlake GU11 Liverpool", venue:"Bridgepoint Elementary, Field 1", kit:HOME_KIT},
+  {date:"2026-11-08", time:"10:30 AM", opp:"DS Stars GU10 Maroon", venue:"DSYSA Sports & Rec Park 12-2", kit:AWAY_KIT, status:"Rescheduled"},
 ];
 const bracket = [
-  "Coyotes FC Navy","FC Westlake Elite Central White","FC Westlake North","HC United Walther",
-  "Lonestar ATX Gold NTH","Lonestar ATX Royal STH","Lonestar ATX Silver NTH","Lonestar ATX White NTH",
-  "LTFC Premier II","SA United Platinum","TC PREMIER SC"
+  "FC Westlake GU11 Dortmund","LTFC GU10 Premier II","Pflugerville FC GU11 Blue","FC Westlake GU11 Liverpool",
+  "LTFC U11G White","DS Stars GU11 Silver","TC Academy GU11 Blue","GalaxySC CTXPL GU10 Black",
+  "DS Stars GU10 Maroon","Lonestar ATX GU11 Rattlers NTH"
 ];
 
 const fmt = d => new Date(d+"T12:00:00").toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});
@@ -249,7 +253,7 @@ const table = bracket.map(t=>{
   const w=g.filter(x=>x.f>x.a).length, l=g.filter(x=>x.f<x.a).length, d=g.filter(x=>x.f===x.a).length;
   const gf=g.reduce((s,x)=>s+x.f,0), ga=g.reduce((s,x)=>s+x.a,0);
   return {team:t, mp:g.length, w,l,d,gf,ga,gd:gf-ga,pts:w*3+d};
-}).sort((a,b)=>((b.mp?b.pts/b.mp:0)-(a.mp?a.pts/a.mp:0))||b.gd-a.gd||b.gf-a.gf); // GotSport ranks by points per game
+}).sort((a,b)=>b.pts-a.pts||b.gd-a.gd||b.gf-a.gf); // CTX PL: points, then goal differential
 const pos = t => table.findIndex(r=>same(r.team,t))+1;
 const rowOf = t => table.find(r=>same(r.team,t));
 const recTd = t => { const r=rowOf(t); return r?`<td class="rec">${r.w}-${r.l}-${r.d}<small>${ord(pos(t))}</small></td>`:"<td class=\"rec\">—</td>"; };
@@ -267,7 +271,7 @@ const heat = t => { const r=rowOf(t); if(!r||!r.mp) return 0; const ppg=r.pts/r.
 rows += upcoming.map(g=>{
   const rep = playedKeys.has(key(g.opp)) ? `<span class="repeat">Rematch</span>` : "";
   return `<tr class="up"><td class="date">${fmt(g.date)}</td><td class="opp"><a class="jump" href="#scout-${slug(g.opp)}" title="${(()=>{const r=rowOf(g.opp);return r&&r.mp?(r.pts/r.mp).toFixed(2)+" points per game":"No games yet"})()}"><mark class="heat" style="--h:${heat(g.opp).toFixed(2)}">${esc(g.opp)}</mark></a>${rep}</td>${recTd(g.opp)}
-    <td class="score">${g.time}</td><td class="venue">${esc(g.venue)}</td></tr>`; }).join("");
+    <td class="score">${g.time}</td><td class="venue">${esc(g.venue)}${g.status?`<span class="resched">${esc(g.status)}</span>`:""}${g.kit?`<div class="kit">${esc(g.kit)}</div>`:""}</td></tr>`; }).join("");
 document.getElementById("grid").innerHTML = rows;
 document.getElementById("pastToggle").addEventListener("click",e=>{
   const b=e.currentTarget, open=b.getAttribute("aria-expanded")!=="true";
@@ -307,23 +311,15 @@ document.getElementById("scouting").innerHTML = upcoming.map((u,i)=>{
 document.querySelectorAll("a.jump").forEach(a=>a.addEventListener("click",()=>{
   const d=document.querySelector(a.getAttribute("href")); if(d) d.open=true; }));
 
-// League tiers (GotSport, Sep 30 2026). [team, W-L-D] in standings order.
+// CTX Premier League I, GU11 girls: two parallel brackets (PlayMetrics, Oct 2 2026).
 const tiers = {
-  "WC-A": {conf:"STXCL Western Conference", name:"Girls U12 Bracket A", tier:"Tier 1 of 3", teams:[
-    ["Lonestar ATX Red STH","4-0-0"],["Lonestar SAT Red","4-0-1"],["FC Westlake Elite North White","2-0-1"],["Lonestar ATX Red NW A","2-0-1"],
-    ["Lonestar ATX Red NW B","2-2-0"],["SA City SC Red","1-1-1"],["Premier FA","1-2-1"],["Lonestar SAT Royal","1-4-1"],
-    ["Lonestar ATX Red NW C","1-4-0"],["Sting CC Clitnovici","0-1-0"],["Lonestar ATX Royal NTH","0-4-0"]]},
-  "WC-B": {conf:"STXCL Western Conference", name:"Girls U12 Bracket B", tier:"Tier 2 of 3", teams:null}, // filled from live table
-  "WC-C": {conf:"STXCL Western Conference", name:"Girls U12 Bracket C", tier:"Tier 3 of 3", teams:[
-    ["FC Westlake Central White","4-0-0"],["LTFC Red","3-0-0"],["LIONS FC","3-1-0"],["Castroville United","3-1-0"],
-    ["FC Westlake Central Blue","2-1-1"],["DS Stars","1-1-2"],["Pflugerville FC Green","0-0-2"],["BLACK LIONS FC LIONESSES","0-2-1"],
-    ["Coyotes FC White","0-3-0"],["SA City SC Blue","0-3-0"],["CTX Soccer Academy Spark","0-4-0"]]},
-  "EC-U11-D": {conf:"STXCL Eastern Conference", name:"Girls U11 Bracket D", tier:"Bracket D of 4", teams:[
-    ["Challenge Aggieland White","3-0-0"],["Coastal Premier II","2-0-1"],["AHFC West Premier II","2-1-0"],["HTX South White","2-1-0"],
-    ["HTX Sienna Gold","1-0-2"],["AHFC SW Blue","1-1-1"],["Challenge East Red","1-2-0"],["Kaptiva Sports Academy TX Purple","0-2-1"],
-    ["RISE SC Nike Volt GU10","0-2-1"],["Dynamos","0-3-0"]]},
+  "CTX-A": {conf:"CTX Premier League I", name:"GU11 Bracket A", tier:"Premier I", teams:[
+    ["Force FC GU11 Blue","3-0-1"],["FC Westlake GU11 Blue","3-2-0"],["Cap City GU11 Sky South","3-0-0"],["LTFC GU11 Red","2-1-0"],
+    ["FC Westlake GU11 Arsenal","1-2-1"],["Lonestar ATX GU11 White STH","1-1-0"],["Lonestar ATX GU11 Eagles NTH","1-2-0"],
+    ["TC Premier SC GU11 Blue","0-2-0"],["FC Westlake GU11 Boca Juniors","0-4-0"]]},
+  "CTX-B": {conf:"CTX Premier League I", name:"GU11 Bracket B", tier:"Premier I", teams:null}, // filled from live table
 };
-tiers["WC-B"].teams = table.map(r=>[strip(r.team), `${r.w}-${r.l}-${r.d}`]);
+tiers["CTX-B"].teams = table.map(r=>[strip(r.team), `${r.w}-${r.l}-${r.d}`]);
 const norm = s => s.toLowerCase().replace(/[^a-z0-9]/g,"");
 const tierChip = (k, highlight, mine) => {
   const t=tiers[k];
@@ -333,30 +329,12 @@ const tierChip = (k, highlight, mine) => {
   return `<span class="tierwrap"><button type="button" class="tierchip${mine?" mine":""}" aria-expanded="false">${esc(t.name.replace("Girls ",""))}, ${t.tier}</button>
     <span class="pop" role="tooltip"><b>${esc(t.conf)}: ${esc(t.name)}</b><ol>${items}</ol></span></span>`;
 };
-document.getElementById("ladder").innerHTML = `League tiers:` +
-  ["WC-A","WC-B","WC-C"].map(k=>tierChip(k,null,k==="WC-B")).join("");
+document.getElementById("ladder").innerHTML = `Premier I brackets:` +
+  ["CTX-A","CTX-B"].map(k=>tierChip(k,null,k==="CTX-B")).join("");
 
-// Tournaments. Scores ours first. tier: key into tiers, or null with a note.
-const tournaments = [
-  {name:"Austin Labor Day Cup", dates:"Sep 5–6, 2026", division:"U12G Gold, the top division. Registered as FC Westlake Central Pre-ECNL GU12 White.", finish:"Did not advance",
-   games:[
-    {date:"2026-09-05", round:"Group", opp:"Challenge STXCL EC G2014/15", f:1, a:6,
-      tier:null, note:"Challenge's STXCL Eastern Conference team. Bracket not checked yet."},
-    {date:"2026-09-05", round:"Group", opp:"RISE SC Pre GA U12", f:0, a:1,
-      tier:null, note:"RISE SC's Pre-Girls Academy squad. Not in any STXCL Western Conference Girls U12 bracket."},
-    {date:"2026-09-06", round:"Group", opp:"Sonny G Academy U12 14/15 Inspire", f:0, a:4,
-      tier:null, note:"Went on to win the U12G Gold division."},
-   ]},
-  {name:"Pre-Labor Day", dates:"Aug 29–30, 2026", division:"STAR Soccer Complex. Division not confirmed yet.", finish:"Out in the quarterfinal",
-   games:[
-    {date:"2026-08-29", round:"Group", opp:"Lion Kings FC 2014/2015 Girls", f:3, a:5,
-      tier:null, note:"Not in any STXCL Western Conference Girls U12 bracket. Likely plays in a different league."},
-    {date:"2026-08-30", round:"Group", opp:"Lonestar ATX Red STH STXCL-WC GU12", f:0, a:3,
-      tier:"WC-A", as:"Lonestar ATX Red STH", note:"Leads Bracket A, one tier above us."},
-    {date:"2026-08-30", round:"QF", opp:"Lonestar ATX Red STH STXCL-WC GU12", f:0, a:2,
-      tier:"WC-A", as:"Lonestar ATX Red STH", note:"Same opponent again, two and a half hours later."},
-   ]},
-];
+// Tournaments. Scores ours first. tier: key into tiers, or null with a note. None yet.
+const tournaments = [];
+document.getElementById("tourneySec").hidden = !tournaments.length;
 document.getElementById("tournaments").innerHTML = tournaments.map(t=>{
   const w=t.games.filter(g=>g.f>g.a).length, l=t.games.filter(g=>g.f<g.a).length, d=t.games.filter(g=>g.f===g.a).length;
   const gf=t.games.reduce((s,g)=>s+g.f,0), ga=t.games.reduce((s,g)=>s+g.a,0);
@@ -388,7 +366,7 @@ document.getElementById("record").innerHTML =
   `<div><b>${me.w}-${me.l}-${me.d}</b>League W-L-D</div><div><b>${ord(pos(US))}</b>In bracket</div><div><b>${me.gf}–${me.ga}</b>Goals for–against</div><div><b>${upcoming.length}</b>Games left</div>` + (()=>{
     const tg=tournaments.flatMap(t=>t.games);
     const w=me.w+tg.filter(g=>g.f>g.a).length, l=me.l+tg.filter(g=>g.f<g.a).length, d=me.d+tg.filter(g=>g.f===g.a).length;
-    return `<div><b>${w}-${l}-${d}</b>Incl. tournaments</div>`; })();
+    return tg.length?`<div><b>${w}-${l}-${d}</b>Incl. tournaments</div>`:""; })();
 
 // Standings
 document.getElementById("standings").innerHTML = table.map((r,i)=>

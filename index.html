@@ -57,6 +57,12 @@
   @media (prefers-reduced-motion: reduce) { a .link { transition: none; } }
   .home { position: fixed; top: calc(14px + env(safe-area-inset-top, 0px)); left: 16px; color: #5b6772; text-decoration: none; font-family: "Barlow Condensed", "Arial Narrow", sans-serif; font-weight: 700; font-size: 18px; letter-spacing: .02em; }
   .home:hover { color: #1c2630; }
+
+  /* Team panels carry each tracker's color */
+  a.t-royal .link{fill:#1f4fbf} a.t-royal:hover .link,a.t-royal:focus-visible .link{fill:#2d5ed3} a.t-royal text{fill:#ffffff}
+  a.t-navy .link{fill:#13284b}  a.t-navy:hover .link,a.t-navy:focus-visible .link{fill:#1c3663}   a.t-navy text{fill:#e8b931}
+  a.t-bvb .link{fill:#fde100}   a.t-bvb:hover .link,a.t-bvb:focus-visible .link{fill:#ffea3d}     a.t-bvb text{fill:#000000}
+  a.t-royal:focus-visible .link,a.t-navy:focus-visible .link,a.t-bvb:focus-visible .link{stroke:#e8b931}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -95,7 +101,7 @@
       <polygon class="center" points="0.0,95.0 -90.4,29.4 -55.8,-76.9 55.8,-76.9 90.4,29.4"/>
 
       <!-- Links: swap hrefs for the real filenames -->
-      <a href="fcw-gu12-white/" aria-label="GU12 White">
+      <a class="t-royal" href="fcw-gu12-white/" aria-label="GU12 White">
         <polygon class="hex link" points="-90.4,29.4 -171.2,55.6 -262.0,0.0 -212.0,-154.0 -105.8,-145.6 -55.8,-76.9"/>
         <text x="-149.5" y="-48.6"><tspan x="-149.5" dy="-0.1em">GU12</tspan><tspan x="-149.5" dy="1.05em">White</tspan></text>
       </a>
@@ -104,13 +110,12 @@
         <text x="149.5" y="-48.6"><tspan x="149.5" dy="-0.1em">Match</tspan><tspan x="149.5" dy="1.05em">Day</tspan></text>
       </a>
 
-      <!-- Future panel: to activate, add href="..." and remove class "soon" -->
-      <a class="soon" aria-disabled="true" aria-label="GU11 Dortmund (coming soon)">
+      <a class="t-bvb" href="dortmund/" aria-label="GU11 Dortmund">
         <polygon class="hex link" points="-55.8,-76.9 -105.8,-145.6 -81.0,-249.2 81.0,-249.2 105.8,-145.6 55.8,-76.9"/>
         <text x="0.0" y="-157.2" style="font-size:28px"><tspan x="0.0" dy="-0.1em">GU11</tspan><tspan x="0.0" dy="1.05em">Dortmund</tspan></text>
       </a>
 
-      <a href="elite-white/" aria-label="Pre-ECNL">
+      <a class="t-navy" href="elite-white/" aria-label="Pre-ECNL">
         <polygon class="hex link" points="0.0,95.0 0.0,180.0 -81.0,249.2 -212.0,154.0 -171.2,55.6 -90.4,29.4"/>
         <text x="-92.4" y="127.2" style="font-size:32px">Pre-ECNL</text>
       </a>
