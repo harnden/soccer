@@ -141,9 +141,9 @@ mark.heat{color:inherit;padding:1px 3px;margin:0 -3px;border-radius:3px;
 :root[data-theme="dark"] .e-g{color:#8fdca5}:root[data-theme="dark"] .e-y{color:#f2cf5b}:root[data-theme="dark"] .e-o{color:#ffa45c}:root[data-theme="dark"] .e-r{color:#ff8a80}
 
 /* Team identity: one color per team, used for the header band, our standings row and our bracket chip */
-:root{--team:#13284b;--team-ink:#e8b931;--team-sub:rgba(241,230,196,.85);--team-stripe:#e8b931;--team-soft:#f6edcf;--team-accent:#8a6a00}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--team-soft:#3a321a;--team-accent:#e8b931}}
-:root[data-theme="dark"]{--team-soft:#3a321a;--team-accent:#e8b931}
+:root{--team:#13284b;--team-ink:#b8914f;--team-sub:rgba(241,230,196,.85);--team-stripe:#b8914f;--team-soft:#f6edcf;--team-accent:#7a5a24}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--team-soft:#3a321a;--team-accent:#b8914f}}
+:root[data-theme="dark"]{--team-soft:#3a321a;--team-accent:#b8914f}
 .band{background:var(--team);color:var(--team-ink);border-radius:12px;padding:18px 20px 16px;margin-bottom:1.6rem;border-bottom:6px solid var(--team-stripe)}
 .band h1{color:var(--team-ink)}
 .band .sub{color:var(--team-sub);margin:.4rem 0 0}
@@ -152,6 +152,16 @@ tr.us td{background:var(--team-soft)}
 .pop li.me{color:var(--team-accent)}
 .back{display:inline-block;margin-bottom:.7rem;color:var(--muted);text-decoration:none;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;font-size:1.05rem;letter-spacing:.02em}
 .back:hover{color:var(--ink)}
+
+/* Page identity: each team page gets its own background; cards keep the shared palette */
+:root{--page-bg:#13284b;--page-ink:#f3ead0;--page-muted:#bca57e}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page-bg:#0c1a33;--page-ink:#f3ead0;--page-muted:#bca57e}}
+:root[data-theme="dark"]{--page-bg:#0c1a33;--page-ink:#f3ead0;--page-muted:#bca57e}
+body{background:var(--page-bg);color:var(--page-ink)}
+.scroll,details.scout,.pop{color:var(--ink)}
+.record div,.ladder,.note,.back{color:var(--page-muted)}
+.record b,.back:hover{color:var(--page-ink)}
+.band{background:#0a1830}
 </style>
 </head>
 <body>

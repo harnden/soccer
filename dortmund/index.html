@@ -154,6 +154,15 @@ tr.us td{background:var(--team-soft)}
 .pop li.me{color:var(--team-accent)}
 .back{display:inline-block;margin-bottom:.7rem;color:var(--muted);text-decoration:none;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;font-size:1.05rem;letter-spacing:.02em}
 .back:hover{color:var(--ink)}
+
+/* Page identity: each team page gets its own background; cards keep the shared palette */
+:root{--page-bg:#fff6c4;--page-ink:#000000;--page-muted:#4d4520}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page-bg:#1c1a0a;--page-ink:#fff6c4;--page-muted:#cfc48a}}
+:root[data-theme="dark"]{--page-bg:#1c1a0a;--page-ink:#fff6c4;--page-muted:#cfc48a}
+body{background:var(--page-bg);color:var(--page-ink)}
+.scroll,details.scout,.pop{color:var(--ink)}
+.record div,.ladder,.note,.back{color:var(--page-muted)}
+.record b,.back:hover{color:var(--page-ink)}
 </style>
 </head>
 <body>
