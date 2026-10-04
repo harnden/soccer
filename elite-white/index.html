@@ -323,7 +323,7 @@ document.getElementById("scouting").innerHTML = upcoming.map((u,i)=>{
     const v=(f,a)=>f>a?"won":f<a?"lost":"drew";
     // Edge = our goal difference vs theirs against the same team
     const edge=(o.f-o.a)-(x.f-x.a);
-    const cls="e-"+band(edge);
+    const cls="e-"+band(capM(edge));
     const tip=edge===0?"Even against this opponent":`${Math.abs(edge)}-goal edge to ${edge>0?"us":"them"} against this opponent`;
     return `<li>${esc(x.opp)}: <span class="edge ${cls}" title="${tip}">We ${v(o.f,o.a)} ${o.f}–${o.a}; they ${v(x.f,x.a)} ${x.f}–${x.a}.</span></li>`;
   }).join("");
