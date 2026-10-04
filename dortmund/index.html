@@ -163,13 +163,20 @@ body{background:var(--page-bg);color:var(--page-ink)}
 .scroll,details.scout,.pop{color:var(--ink)}
 .record div,.ladder,.note,.back{color:var(--page-muted)}
 .record b,.back:hover{color:var(--page-ink)}
+
+/* Matchup highlight under the opponent's name: green strong edge, yellow edge, orange toss-up, red tough */
+mark.mu{color:inherit;padding:1px 3px;margin:0 -3px;border-radius:3px;background:linear-gradient(transparent 38%,var(--mu) 38%,var(--mu) 92%,transparent 92%)}
+mark.mu-g{--mu:rgba(46,160,80,.42)}mark.mu-y{--mu:rgba(242,201,76,.62)}mark.mu-o{--mu:rgba(232,116,42,.45)}mark.mu-r{--mu:rgba(200,40,30,.40)}
+mark.mu-g.faint{--mu:rgba(46,160,80,.2)}mark.mu-y.faint{--mu:rgba(242,201,76,.3)}mark.mu-o.faint{--mu:rgba(232,116,42,.22)}mark.mu-r.faint{--mu:rgba(200,40,30,.2)}
+tr.up.fv-g td:first-child{box-shadow:inset 4px 0 0 rgba(46,160,80,.75)}tr.up.fv-y td:first-child{box-shadow:inset 4px 0 0 rgba(242,201,76,.9)}
+tr.up.fv-o td:first-child{box-shadow:inset 4px 0 0 rgba(232,116,42,.8)}tr.up.fv-r td:first-child{box-shadow:inset 4px 0 0 rgba(200,40,30,.75)}
 </style>
 </head>
 <body>
 <main>
   <header class="band">
     <h1>FC Westlake GU11 Dortmund</h1>
-    <p class="sub">CTX Premier League, Fall 2026. GU11 CTX I, Bracket B (Premier I). Results from PlayMetrics as of Oct 2, 2026.</p>
+    <p class="sub">CTX Premier League, Fall 2026. GU11 CTX I, Bracket B (Premier I). Results from PlayMetrics as of Oct 3, 2026.</p>
   </header>
   <div class="ladder" id="ladder"></div>
   <div class="record" id="record"></div>
@@ -227,7 +234,7 @@ const results = [
 // kit: away = all navy (bring white/gold); home = white/gold (bring navy)
 const AWAY_KIT="All navy, bring white/gold", HOME_KIT="White/gold, bring navy";
 const upcoming = [
-  {date:"2026-10-04", time:"11:00 AM", opp:"Lonestar ATX GU11 Rattlers NTH", venue:"Westcreek, Field 3 East", kit:AWAY_KIT},
+  {date:null, time:"TBD", opp:"Lonestar ATX GU11 Rattlers NTH", venue:"TBD", kit:AWAY_KIT},
   {date:"2026-10-10", time:"2:30 PM", opp:"Pflugerville FC GU11 Blue", venue:"Wells Point Park 1 (9v9)", kit:AWAY_KIT, status:"Rescheduled"},
   {date:"2026-10-11", time:"9:00 AM", opp:"DS Stars GU11 Silver", venue:"DSYSA Sports & Rec Park 12-1", kit:AWAY_KIT},
   {date:"2026-10-17", time:"4:00 PM", opp:"GalaxySC CTXPL GU10 Black", venue:"Clay Madsen Soccer Fields 1 A", kit:AWAY_KIT},
@@ -241,8 +248,8 @@ const bracket = [
   "DS Stars GU10 Maroon","Lonestar ATX GU11 Rattlers NTH"
 ];
 
-const fmt = d => new Date(d+"T12:00:00").toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});
-const fmtS = d => new Date(d+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric"});
+const fmt = d => !d ? "TBD" : new Date(d+"T12:00:00").toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});
+const fmtS = d => !d ? "TBD" : new Date(d+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric"});
 const esc = s => s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const slug = s => key(s).replace(/[^a-z0-9]+/g,"-");
 const ord = n => n+(["th","st","nd","rd"][(n%100>10&&n%100<14)?0:n%10]||"th");
@@ -266,6 +273,21 @@ const pos = t => table.findIndex(r=>same(r.team,t))+1;
 const rowOf = t => table.find(r=>same(r.team,t));
 const recTd = t => { const r=rowOf(t); return r?`<td class="rec">${r.w}-${r.l}-${r.d}<small>${ord(pos(t))}</small></td>`:"<td class=\"rec\">—</td>"; };
 
+// Matchup favorability (goals). Positive favors us.
+const capM = m => Math.max(-5, Math.min(5, m));
+function matchup(t){
+  const us = gamesOf(US).filter(scored), them = gamesOf(t).filter(scored);
+  let sum=0, w=0, n=0;
+  us.filter(x=>same(x.opp,t)).forEach(x=>{ sum+=2*capM(x.f-x.a); w+=2; n++; }); // head-to-head counts double
+  them.filter(x=>!same(x.opp,US)).forEach(x=>us.filter(y=>same(y.opp,x.opp)).forEach(y=>{ sum+=capM((y.f-y.a)-(x.f-x.a)); w+=1; n++; }));
+  if(w) return {s:sum/w, n, form:false};
+  const a=rowOf(US), b=rowOf(t);
+  if(a&&b&&a.mp&&b.mp) return {s:capM(a.gd/a.mp-b.gd/b.mp), n:0, form:true};
+  return null;
+}
+const band = s => s>=3?"g":s>=1?"y":s>-1?"o":"r";
+const muMark = (t,m) => m ? `<mark class="mu mu-${band(m.s)}${m.form?" faint":""}">${esc(t)}</mark>` : esc(t);
+
 // Main grid
 const ours = gamesOf(US).filter(scored).sort((a,b)=>a.date.localeCompare(b.date));
 const playedKeys = new Set(ours.map(g=>key(g.opp)));
@@ -276,9 +298,11 @@ rows += ours.map(g=>{ const r=res(g.f,g.a);
 rows += `<tr class="divider"><td colspan="5">Upcoming</td></tr>`;
 // Highlight strength from opponent points per game (0–3), eased so strong teams stand out
 const heat = t => { const r=rowOf(t); if(!r||!r.mp) return 0; const ppg=r.pts/r.mp; return Math.pow(Math.min(ppg,3)/3,1.5); };
+upcoming.sort((a,b)=>(a.date?0:1)-(b.date?0:1)||(a.date||"").localeCompare(b.date||""));
 rows += upcoming.map(g=>{
   const rep = playedKeys.has(key(g.opp)) ? `<span class="repeat">Rematch</span>` : "";
-  return `<tr class="up"><td class="date">${fmt(g.date)}</td><td class="opp"><a class="jump" href="#scout-${slug(g.opp)}" title="${(()=>{const r=rowOf(g.opp);return r&&r.mp?(r.pts/r.mp).toFixed(2)+" points per game":"No games yet"})()}"><mark class="heat" style="--h:${heat(g.opp).toFixed(2)}">${esc(g.opp)}</mark></a>${rep}</td>${recTd(g.opp)}
+  const m = matchup(g.opp);
+  return `<tr class="up${m?` fv-${band(m.s)}`:""}"><td class="date">${fmt(g.date)}</td><td class="opp"><a class="jump" href="#scout-${slug(g.opp)}" title="${(()=>{const r=rowOf(g.opp);return r&&r.mp?(r.pts/r.mp).toFixed(2)+" points per game":"No games yet"})()}">${muMark(g.opp,m)}</a>${rep}</td>${recTd(g.opp)}
     <td class="score">${g.time}</td><td class="venue">${esc(g.venue)}${g.status?`<span class="resched">${esc(g.status)}</span>`:""}${g.kit?`<div class="kit">${esc(g.kit)}</div>`:""}</td></tr>`; }).join("");
 document.getElementById("grid").innerHTML = rows;
 document.getElementById("pastToggle").addEventListener("click",e=>{
@@ -302,7 +326,7 @@ document.getElementById("scouting").innerHTML = upcoming.map((u,i)=>{
     const v=(f,a)=>f>a?"won":f<a?"lost":"drew";
     // Edge = our goal difference vs theirs against the same team
     const edge=(o.f-o.a)-(x.f-x.a);
-    const cls=edge>=3?"e-g":edge>=1?"e-y":edge>=-1?"e-o":"e-r";
+    const cls="e-"+band(edge);
     const tip=edge===0?"Even against this opponent":`${Math.abs(edge)}-goal edge to ${edge>0?"us":"them"} against this opponent`;
     return `<li>${esc(x.opp)}: <span class="edge ${cls}" title="${tip}">We ${v(o.f,o.a)} ${o.f}–${o.a}; they ${v(x.f,x.a)} ${x.f}–${x.a}.</span></li>`;
   }).join("");
