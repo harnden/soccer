@@ -81,7 +81,6 @@ tr.up .score{color:var(--next-ink);font-size:1.1rem}
 .venue{color:var(--muted);font-size:.92rem}
 .kit{font-size:.82rem;margin-top:2px}
 .resched{display:inline-block;margin-left:6px;font-size:.75rem;font-weight:600;color:var(--accent);border:1px solid currentColor;border-radius:4px;padding:0 5px}
-.repeat{display:inline-block;margin-left:6px;font-size:.78rem;font-weight:600;color:var(--warn);border:1px solid currentColor;border-radius:4px;padding:0 5px}
 .checks{display:grid;gap:10px;margin-top:.4rem}
 .verdict{padding:12px 14px;border-radius:10px;background:var(--card);border:1px solid var(--line)}
 .verdict strong{color:var(--ok)}
@@ -90,6 +89,7 @@ ul.teams{list-style:none;padding:0;margin:.4rem 0 0;display:grid;grid-template-c
 ul.teams li{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed var(--line);padding:5px 0}
 .st{font-size:.88rem;color:var(--muted);white-space:nowrap}
 .st.p{color:var(--ok)} .st.s{color:var(--accent)} .st.x{color:var(--warn);font-weight:600}
+.scrim{font-weight:600;margin-left:1px}
 .note{color:var(--muted);font-size:.92rem;margin-top:.8rem}
 @media (max-width:520px){ main{padding:20px 12px 40px} th,td{padding:9px 9px} }
 details.scout{background:var(--card);border:1px solid var(--line);border-radius:10px;margin-bottom:10px}
@@ -231,6 +231,11 @@ const results = [
   ["2026-09-27","LTFC GU10 Premier II",3,0,"FC Westlake GU11 Liverpool"],
 ].map(([date,home,hs,as,away])=>({date,home,hs,as,away}));
 
+// Scrimmages: ours first. Kept out of league standings, matchup colors and scouting.
+const scrimmages = [
+  {date:"2026-08-29", time:"9:15 AM", opp:"FC Westlake GU11 Liverpool", f:1, a:3, venue:"St Francis School"},
+];
+
 // kit: away = all navy (bring white/gold); home = white/gold (bring navy)
 const AWAY_KIT="All navy, bring white/gold", HOME_KIT="White/gold, bring navy";
 const upcoming = [
@@ -290,19 +295,20 @@ const muMark = (t,m) => m ? `<mark class="mu mu-${band(m.s)}${m.form?" faint":""
 
 // Main grid
 const ours = gamesOf(US).filter(scored).sort((a,b)=>a.date.localeCompare(b.date));
-const playedKeys = new Set(ours.map(g=>key(g.opp)));
-let rows = `<tr class="toggle"><td colspan="5"><button type="button" id="pastToggle" aria-expanded="false">Results <span class="smeta">${ours.length} played, ${ours.filter(g=>g.f>g.a).length}-${ours.filter(g=>g.f<g.a).length}-${ours.filter(g=>g.f===g.a).length}. Show games</span></button></td></tr>`;
-rows += ours.map(g=>{ const r=res(g.f,g.a);
+const allPast = [...ours, ...scrimmages.map(g=>({...g, scrim:true}))].sort((a,b)=>a.date.localeCompare(b.date));
+const scrimVs = t => scrimmages.filter(g=>same(g.opp,t));
+let rows = `<tr class="toggle"><td colspan="5"><button type="button" id="pastToggle" aria-expanded="false">Results <span class="smeta">${allPast.length} played, ${allPast.filter(g=>g.f>g.a).length}-${allPast.filter(g=>g.f<g.a).length}-${allPast.filter(g=>g.f===g.a).length}. Show games</span></button></td></tr>`;
+rows += allPast.map(g=>{ const r=res(g.f,g.a);
   return `<tr class="${r} past"><td class="date">${fmt(g.date)}</td><td class="opp">${esc(g.opp)}</td>${recTd(g.opp)}
-    <td class="score"><span class="tag">${r}</span>${g.f}–${g.a}</td><td class="venue">—</td></tr>`; }).join("");
+    <td class="score"><span class="tag">${r}</span>${g.f}–${g.a}${g.scrim?`<span class="scrim" title="Scrimmage">*</span>`:""}</td><td class="venue">${g.scrim?esc(g.venue):"—"}</td></tr>`; }).join("");
+if(scrimmages.length) rows += `<tr class="past"><td colspan="5" class="smeta">* Scrimmage</td></tr>`;
 rows += `<tr class="divider"><td colspan="5">Upcoming</td></tr>`;
 // Highlight strength from opponent points per game (0–3), eased so strong teams stand out
 const heat = t => { const r=rowOf(t); if(!r||!r.mp) return 0; const ppg=r.pts/r.mp; return Math.pow(Math.min(ppg,3)/3,1.5); };
 upcoming.sort((a,b)=>(a.date?0:1)-(b.date?0:1)||(a.date||"").localeCompare(b.date||""));
 rows += upcoming.map(g=>{
-  const rep = playedKeys.has(key(g.opp)) ? `<span class="repeat">Rematch</span>` : "";
-  const m = matchup(g.opp);
-  return `<tr class="up${m?` fv-${band(m.s)}`:""}"><td class="date">${fmt(g.date)}</td><td class="opp"><a class="jump" href="#scout-${slug(g.opp)}" title="${(()=>{const r=rowOf(g.opp);return r&&r.mp?(r.pts/r.mp).toFixed(2)+" points per game":"No games yet"})()}">${muMark(g.opp,m)}</a>${rep}</td>${recTd(g.opp)}
+    const m = matchup(g.opp);
+  return `<tr class="up${m?` fv-${band(m.s)}`:""}"><td class="date">${fmt(g.date)}</td><td class="opp"><a class="jump" href="#scout-${slug(g.opp)}" title="${(()=>{const r=rowOf(g.opp);return r&&r.mp?(r.pts/r.mp).toFixed(2)+" points per game":"No games yet"})()}">${muMark(g.opp,m)}</a></td>${recTd(g.opp)}
     <td class="score">${g.time}</td><td class="venue">${esc(g.venue)}${g.status?`<span class="resched">${esc(g.status)}</span>`:""}${g.kit?`<div class="kit">${esc(g.kit)}</div>`:""}</td></tr>`; }).join("");
 document.getElementById("grid").innerHTML = rows;
 document.getElementById("pastToggle").addEventListener("click",e=>{
@@ -330,6 +336,11 @@ document.getElementById("scouting").innerHTML = upcoming.map((u,i)=>{
     const tip=edge===0?"Even against this opponent":`${Math.abs(edge)}-goal edge to ${edge>0?"us":"them"} against this opponent`;
     return `<li>${esc(x.opp)}: <span class="edge ${cls}" title="${tip}">We ${v(o.f,o.a)} ${o.f}–${o.a}; they ${v(x.f,x.a)} ${x.f}–${x.a}.</span></li>`;
   }).join("");
+  const v2=(f,a)=>f>a?"won":f<a?"lost":"drew";
+  const h2h = [...gamesOf(US).filter(x=>scored(x)&&same(x.opp,t)), ...scrimVs(t).map(x=>({...x,scrim:true}))]
+    .sort((a,b)=>a.date.localeCompare(b.date))
+    .map(x=>`<li>Head to head${x.scrim?" (scrimmage)":""}: <span class="edge e-${band(capM(x.f-x.a))}">We ${v2(x.f,x.a)} ${x.f}–${x.a}, ${fmtS(x.date)}.</span></li>`).join("");
+  const cmpAll = h2h + common;
   return `<details class="scout" id="scout-${slug(t)}"${i===0?" open":""}>
     <summary><span class="sname">${esc(t)}</span><span class="smeta">${fmt(u.date)}, ${u.time}. ${r.w}-${r.l}-${r.d}, ${ord(pos(t))}, GF ${r.gf} GA ${r.ga}</span></summary>
     <div class="sbody">
@@ -337,7 +348,7 @@ document.getElementById("scouting").innerHTML = upcoming.map((u,i)=>{
       <h3>Their results</h3>
       ${g.length?`<table class="mini"><tbody>${list}</tbody></table>`:`<p class="smeta">No games played yet.</p>`}
       <h3>Common opponents</h3>
-      ${common?`<ul class="cmp">${common}</ul>`:`<p class="smeta">None yet.</p>`}
+      ${cmpAll?`<ul class="cmp">${cmpAll}</ul>`:`<p class="smeta">None yet.</p>`}
     </div></details>`;
 }).join("");
 document.querySelectorAll("a.jump").forEach(a=>a.addEventListener("click",()=>{
@@ -398,7 +409,8 @@ document.getElementById("record").innerHTML =
   `<div><b>${me.w}-${me.l}-${me.d}</b>League W-L-D</div><div><b>${ord(pos(US))}</b>In bracket</div><div><b>${me.gf}–${me.ga}</b>Goals for–against</div><div><b>${upcoming.length}</b>Games left</div>` + (()=>{
     const tg=tournaments.flatMap(t=>t.games);
     const w=me.w+tg.filter(g=>g.f>g.a).length, l=me.l+tg.filter(g=>g.f<g.a).length, d=me.d+tg.filter(g=>g.f===g.a).length;
-    return tg.length?`<div><b>${w}-${l}-${d}</b>Incl. tournaments</div>`:""; })();
+    const sg=scrimmages, sw=w+sg.filter(g=>g.f>g.a).length, sl=l+sg.filter(g=>g.f<g.a).length, sd=d+sg.filter(g=>g.f===g.a).length;
+    return (tg.length?`<div><b>${w}-${l}-${d}</b>Incl. tournaments</div>`:"") + (sg.length?`<div><b>${sw}-${sl}-${sd}</b>Incl. scrimmages</div>`:""); })();
 
 // Standings
 document.getElementById("standings").innerHTML = table.map((r,i)=>
