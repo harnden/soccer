@@ -4,64 +4,729 @@
 <meta charset="utf-8">
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Soccer tools</title>
+<meta name="theme-color" content="#f7f9fb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Match day">
+<title>Match day</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f7f9fb;--ink:#1d2a33;--muted:#5d6b75;--line:#c9d3db;--card:#fff;--accent:#2c5f86;--tint:rgba(44,95,134,.08);
+:root{
+  --bg:#f7f9fb;--ink:#1d2a33;--muted:#5d6b75;--line:#dbe2e8;--card:#fff;
+  --accent:#2c5f86;--tint:rgba(44,95,134,.10);--on-accent:#fff;
+  --ok:#1f6a36;--warn:#8f2626;--amber:#f0b429;--amber-text:#9a6b00;
+  --display:"Barlow Condensed","Arial Narrow",sans-serif;
   box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root{--bg:#141a1f;--ink:#e7edf2;--muted:#9aa8b3;--line:#35414a;--card:#1b232a;--accent:#a9cdea;--tint:rgba(169,205,234,.10)}}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#141a1f;--ink:#e7edf2;--muted:#9aa8b3;--line:#2b353d;--card:#1b232a;
+  --accent:#5b8db5;--tint:rgba(91,141,181,.16);--ok:#9fe0b0;--warn:#f2aaaa;--amber-text:#f0b429}}
 *,*::before,*::after{box-sizing:inherit}
-html,body{height:100%}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 "Source Sans 3",system-ui,-apple-system,sans-serif;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100%;overflow-x:hidden}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 "Source Sans 3",system-ui,-apple-system,sans-serif}
+.wrap{max-width:520px;margin:0 auto;padding:0 14px 40px}
+a.hub{display:block;padding:10px 0 0;color:var(--muted);font-size:.9rem;text-decoration:none}
+a.hub::before{content:"← "}
+h1,h2{font-family:var(--display);font-weight:700;line-height:1.05;margin:0}
+h1{font-size:2rem;margin:6px 0 2px}
+h2{font-size:1.45rem;margin:0 0 10px}
+.sub{color:var(--muted);margin:0 0 14px;font-size:.95rem}
+button{font:inherit;color:inherit}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
-/* The hub is a pitch's centre circle: halfway line across the page, tools sit on the ring */
-.pitch{position:relative;width:100%;display:flex;justify-content:center;padding:28px 0}
-.pitch::before{content:"";position:absolute;left:0;right:0;top:50%;border-top:2px solid var(--line)}
-.hub{--size:min(92vw,560px);--node:clamp(104px,28vw,150px);--R:calc(var(--size)/2 - var(--node)/2);
-  position:relative;width:var(--size);height:var(--size)}
-.ring{position:absolute;inset:calc(var(--node)/2);border:2px solid var(--line);border-radius:50%;background:var(--bg)}
-.hub{--in:calc(var(--size) * .2)}
-.center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;width:calc(var(--in) * 2)}
-.center h1{margin:0;font:700 clamp(1.5rem,6vw,2.4rem)/1 "Barlow Condensed","Arial Narrow",sans-serif}
-.center p{margin:.3rem 0 0;color:var(--muted);font-size:clamp(.78rem,2.6vw,.92rem)}
+/* steps */
+nav.steps{position:sticky;top:0;z-index:20;display:flex;background:var(--bg);border-bottom:1px solid var(--line);margin:8px -14px 16px;padding:0 6px}
+nav.steps button{flex:1;background:none;border:0;border-bottom:3px solid transparent;padding:12px 2px 10px;font-weight:600;font-size:.9rem;color:var(--muted);cursor:pointer}
+nav.steps button .n{display:inline-block;width:1.35em;height:1.35em;line-height:1.35em;border-radius:50%;background:var(--line);color:var(--ink);font-size:.78rem;margin-right:5px;text-align:center}
+nav.steps button.on{color:var(--ink);border-bottom-color:var(--accent)}
+nav.steps button.on .n{background:var(--accent);color:var(--on-accent)}
+nav.steps button:disabled{opacity:.45;cursor:default}
 
-.node{position:absolute;left:50%;top:50%;width:var(--node);height:var(--node);margin:calc(var(--node)/-2) 0 0 calc(var(--node)/-2);
-  transform:rotate(var(--a)) translate(var(--R)) rotate(calc(-1 * var(--a)));
-  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px;
-  border-radius:50%;background:var(--card);border:2px solid var(--line);color:inherit;text-decoration:none;
-  transition:border-color .15s,background-color .15s}
-.node:hover,.node:focus-visible{border-color:var(--accent);background:var(--tint)}
-.node:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
-.node .icon{font-size:clamp(1.3rem,5vw,1.8rem);line-height:1;margin-bottom:4px}
-.node .name{font:700 clamp(1.05rem,4.2vw,1.45rem)/1 "Barlow Condensed","Arial Narrow",sans-serif}
-.node .what{color:var(--muted);font-size:clamp(.72rem,2.5vw,.85rem);margin-top:3px}
-.node:hover .name,.node:focus-visible .name{color:var(--accent)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+label.l{display:block;font-weight:600;font-size:.9rem;margin-bottom:6px}
+textarea,input[type=text],select{width:100%;padding:11px 12px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-size:16px}
+textarea{min-height:200px;resize:vertical;line-height:1.5}
+.hint{color:var(--muted);font-size:.85rem;margin-top:6px}
+.btn{display:block;width:100%;padding:13px;border-radius:10px;border:0;background:var(--accent);color:var(--on-accent);font-weight:700;font-size:1.05rem;cursor:pointer;margin-top:12px}
+.btn:disabled{background:var(--line);color:var(--muted);cursor:default}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--muted);font-weight:600;font-size:.95rem}
+.btn.danger{background:transparent;border:1px solid var(--warn);color:var(--warn);font-weight:600;font-size:.95rem}
+.btn.danger.armed{background:var(--warn);color:var(--bg)}
+.row{display:flex;gap:10px;align-items:center}
+.row>*{flex:1}
 
-@media (prefers-reduced-motion:no-preference){
-  .node{animation:out .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i) * 70ms)}
-  @keyframes out{from{transform:rotate(var(--a)) translate(0) rotate(calc(-1 * var(--a))) scale(.4);opacity:0}}
-}
-.note{max-width:34rem;margin:0 20px 28px;text-align:center;color:var(--muted);font-size:.88rem}
+/* teams */
+.teams{display:grid;gap:10px}
+.team{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--c);border-radius:12px;padding:10px 12px}
+.team input.tname{border:0;border-bottom:1px dashed var(--line);border-radius:0;background:transparent;padding:4px 0;font:700 1.35rem var(--display);width:100%}
+.team ul{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.team li{background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:.92rem;cursor:pointer}
+.team li:hover{border-color:var(--accent)}
+.team .cnt{color:var(--muted);font-size:.85rem}
+
+/* formats */
+.formats{display:grid;gap:10px}
+.fmt{display:block;width:100%;text-align:left;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:14px;cursor:pointer}
+.fmt b{display:block;font:700 1.4rem var(--display)}
+.fmt span{color:var(--muted);font-size:.93rem}
+.fmt.on{border-color:var(--accent);background:var(--tint)}
+.fmt:disabled{cursor:default;opacity:.55}
+.soon{display:inline-block;margin-left:6px;font:600 .75rem "Source Sans 3",sans-serif;color:var(--amber-text);border:1px solid currentColor;border-radius:999px;padding:0 7px;vertical-align:middle}
+
+/* matches */
+.tabs{display:flex;gap:6px;margin-bottom:12px}
+.tabs button{flex:1;padding:8px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-weight:600;cursor:pointer}
+.tabs button.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.rlabel{font:700 1.05rem var(--display);color:var(--muted);margin:14px 0 6px}
+.match{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;width:100%;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:6px;cursor:pointer;text-align:left}
+.match:disabled{cursor:default}
+.match .h{text-align:right}
+.match .t{font-weight:600;overflow:hidden;text-overflow:ellipsis}
+.match .t.tbd{color:var(--muted);font-style:italic;font-weight:400}
+.match .t.win{color:var(--ok)}
+.match .s{font:700 1.35rem var(--display);font-variant-numeric:tabular-nums;min-width:3.2em;text-align:center}
+.match.live{border-color:var(--amber);box-shadow:inset 3px 0 0 var(--amber)}
+.match.done .s{color:var(--muted)}
+.dot{display:inline-block;width:.6em;height:.6em;border-radius:50%;background:var(--c);margin:0 5px;vertical-align:middle}
+table.std{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+table.std th,table.std td{padding:8px 6px;text-align:center;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+table.std th{font-size:.8rem;color:var(--muted);font-weight:600}
+table.std td:nth-child(2),table.std th:nth-child(2){text-align:left}
+table.std tr:last-child td{border-bottom:0}
+.champ{text-align:center;background:var(--card);border:2px solid var(--amber);border-radius:12px;padding:14px;margin-bottom:12px}
+.champ b{display:block;font:800 1.8rem var(--display);color:var(--amber-text)}
+
+/* live board */
+.live-head{text-align:center;color:var(--muted);font-weight:600;margin:4px 0 8px}
+.scores{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sbtn{border:0;border-radius:16px;padding:14px 8px 12px;background:var(--c);color:#1d2a33;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;touch-action:manipulation}
+.sbtn .nm{font:700 1.15rem var(--display);text-align:center;line-height:1.1}
+.sbtn .num{font:800 3.8rem/1 var(--display);font-variant-numeric:tabular-nums}
+.sbtn .tap{font-size:.78rem;opacity:.8}
+.sbtn.armed{outline:3px solid var(--amber);outline-offset:3px;animation:pulse .9s ease-in-out infinite}
+.sbtn.armed .tap{opacity:1;font-weight:700}
+.sbtn:disabled{cursor:default;opacity:.8}
+@keyframes pulse{50%{transform:scale(1.03)}}
+@media (prefers-reduced-motion:reduce){.sbtn.armed{animation:none}}
+.log .e{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--line)}
+.log .e:last-child{border-bottom:0}
+.log .who{font-weight:600}
+.log .meta{color:var(--muted);font-size:.85rem}
+.empty{color:var(--muted);text-align:center;padding:14px 0}
+.pick{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.leader{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line)}
+.leader:last-child{border-bottom:0}
+.leader b{font:700 1.2rem var(--display)}
+.foot{margin-top:24px;padding-top:12px;border-top:1px solid var(--line)}
+.foot .row button{margin-top:0}
+.small{font-size:.85rem;color:var(--muted)}
+.roster{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
+.roster:last-child{border-bottom:0}
+.roster .rn{flex:1;min-width:0}
+.roster .rn b{display:block;font:700 1.2rem var(--display);line-height:1.1}
+.roster .rn span{color:var(--muted);font-size:.85rem}
+.mini{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:7px 10px;font-weight:600;font-size:.88rem;cursor:pointer;white-space:nowrap}
+.mini.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.mini.del{color:var(--warn)}
+.mini.del.armed{background:var(--warn);border-color:var(--warn);color:var(--bg)}
+.mini:disabled{opacity:.5;cursor:default}
+.att{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.att button{border:1px solid var(--accent);background:var(--tint);color:var(--ink);border-radius:999px;padding:6px 12px;font-weight:600;font-size:.95rem;cursor:pointer}
+.chip{display:inline-flex;align-items:center;gap:2px;border:1px solid var(--accent);background:var(--tint);border-radius:999px;padding:3px 4px 3px 12px;font-weight:600;font-size:.95rem}
+.chip button{border:0;background:none;color:var(--muted);font-size:1rem;line-height:1;padding:4px 7px;border-radius:50%;cursor:pointer}
+.chip button:hover{color:var(--warn)}
+.rload{flex:1;min-width:0;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 12px;cursor:pointer}
+.rload:hover{border-color:var(--accent)}
+.rload b{display:block;font:700 1.25rem var(--display);line-height:1.1}
+.rload span{color:var(--muted);font-size:.85rem}
+.atthead{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.atthead .count{font:700 1.3rem var(--display)}
+.linkbtn.back{display:block;margin:0 0 12px;font-size:.95rem}
+.rload.on{border-color:var(--accent);background:var(--tint)}
+.rload .st{color:var(--accent);font-weight:700}
+.linkbtn{background:none;border:0;color:var(--accent);font-weight:600;font-size:.88rem;cursor:pointer;padding:0}
+.incoming{border:2px solid var(--accent);background:var(--tint)}
+[hidden]{display:none!important}
 </style>
 </head>
 <body>
-<div class="pitch">
-  <nav class="hub" aria-label="Soccer tools">
-    <div class="ring" aria-hidden="true"></div>
-    <!-- One node per tool; spread --a evenly around 360deg (3 tools: -90, 30, 150; 4 tools: -90, 0, 90, 180) -->
-    <div class="center"><h1>Soccer tools</h1><p>FC Westlake</p></div>
-    <a class="node" href="fcw-gu12-white/" style="--a:-90deg;--i:0">
-      <span class="icon" aria-hidden="true">📊</span><span class="name">GU12 White</span><span class="what">Season tracker</span></a>
-    <a class="node" href="tournament/" style="--a:30deg;--i:1">
-      <span class="icon" aria-hidden="true">🏆</span><span class="name">Tournament</span><span class="what">Brackets and round-robin</span></a>
-    <a class="node" href="camp/" style="--a:150deg;--i:2">
-      <span class="icon" aria-hidden="true">🎽</span><span class="name">Camp</span><span class="what">Rosters, teams, scores</span></a>
+<div class="wrap">
+  <a class="hub" href="../">Soccer tools</a>
+  <h1>Match day</h1>
+  <nav class="steps" id="steps">
+    <button data-step="players"><span class="n">1</span>Players</button>
+    <button data-step="teams"><span class="n">2</span>Teams</button>
+    <button data-step="format"><span class="n">3</span>Format</button>
+    <button data-step="play"><span class="n">4</span>Play</button>
   </nav>
+
+  <!-- 1 PLAYERS -->
+  <section id="s-players">
+    <div class="panel incoming" id="incoming" hidden></div>
+    <div class="panel" id="rosterPanel">
+      <div class="atthead"><label class="l" style="margin:0">Rosters</label><button class="linkbtn" id="newRoster">+ New roster</button></div>
+      <div class="hint" style="margin:2px 0 6px">Tap a roster to add its players to today's list. Tap again to take them off.</div>
+      <div id="rosterList"></div>
+    </div>
+    <div class="panel incoming" id="rosterEditor" hidden>
+      <label class="l" for="edName">Roster name</label>
+      <input type="text" id="edName" placeholder="e.g. White team">
+      <label class="l" style="margin-top:12px">Players <span class="small" id="edCount"></span></label>
+      <div class="att" id="edList"></div>
+      <div class="row" style="margin-top:10px">
+        <textarea id="edAdd" rows="1" placeholder="Add names" aria-label="Add names to roster" style="min-height:0;height:46px;resize:none"></textarea>
+        <button class="mini primary" id="edAddBtn" style="flex:0 0 auto;padding:11px 14px">Add</button>
+      </div>
+      <div class="hint">One name, or paste a list (one per line). First names only.</div>
+      <div class="row" style="margin-top:12px">
+        <button class="mini primary" id="edSave" style="padding:11px">Save roster</button>
+        <button class="mini" id="edCancel" style="padding:11px">Cancel</button>
+      </div>
+      <div style="margin-top:10px"><button class="linkbtn" id="edDelete" style="color:var(--warn)">Delete this roster</button></div>
+    </div>
+    <div class="panel">
+      <div class="atthead"><label class="l" style="margin:0">Today's players</label><span class="count" id="nameCount"></span></div>
+      <div class="hint" id="todayHint" style="margin-top:2px">Tap ✕ on anyone who isn't here.</div>
+      <div class="att" id="today"></div>
+      <div class="row" style="margin-top:12px">
+        <textarea id="addNames" rows="1" placeholder="Add names" aria-label="Add names" style="min-height:0;height:46px;resize:none"></textarea>
+        <button class="mini primary" id="addBtn" style="flex:0 0 auto;padding:11px 14px">Add</button>
+      </div>
+      <div class="hint">One name, or paste a whole list (one per line). First names only.</div>
+      <div style="margin-top:10px" id="clearWrap"><button class="linkbtn" id="clearToday">Clear list</button></div>
+    </div>
+    <p class="small">No players, just teams? Leave the list empty and name the teams on the next step.</p>
+    <button class="btn" data-go="teams">Next: make teams</button>
+  </section>
+
+  <!-- 2 TEAMS -->
+  <section id="s-teams" hidden>
+    <button class="linkbtn back" data-go="players">← Back to players</button>
+    <div class="panel">
+      <div class="row">
+        <div><label class="l" for="teamCount">Number of teams</label><select id="teamCount"></select></div>
+      </div>
+      <div class="hint" id="sizeNote"></div>
+      <button class="btn" id="shuffle">Shuffle into teams</button>
+      <div class="hint" id="lockNote" hidden>A competition is in progress. Rename teams freely; reshuffling starts the competition over.</div>
+    </div>
+    <div class="teams" id="teamList"></div>
+    <p class="small" id="teamTip" hidden>Tap a team name to rename it. Tap a player to move them to the next team.</p>
+    <button class="btn" data-go="format" id="toFormat" disabled>Next: choose a format</button>
+  </section>
+
+  <!-- 3 FORMAT -->
+  <section id="s-format" hidden>
+    <button class="linkbtn back" data-go="teams">← Back to teams</button>
+    <div class="formats" id="formats">
+      <button class="fmt" data-fmt="single"><b>Single game</b><span>Pick any two teams and keep score.</span></button>
+      <button class="fmt" data-fmt="roundrobin"><b>Round robin</b><span>Everyone plays everyone. Standings by points.</span></button>
+      <button class="fmt" data-fmt="knockout"><b>Knockout</b><span>Win and advance. Byes fill out the bracket.</span></button>
+      <button class="fmt" data-fmt="drills" disabled><b>Drills <span class="soon">Coming soon</span></b><span>Scored drill scenarios.</span></button>
+    </div>
+    <p class="hint" id="fmtNote"></p>
+    <button class="btn" id="startComp" disabled>Start</button>
+  </section>
+
+  <!-- 4 PLAY -->
+  <section id="s-play" hidden>
+    <div id="playList"></div>
+    <div id="liveBoard" hidden></div>
+  </section>
+
+  <div class="foot">
+    <div class="row">
+      <button class="btn ghost" id="exportBtn">Copy backup</button>
+      <button class="btn ghost" id="importBtn">Restore backup</button>
+    </div>
+    <div id="importBox" hidden>
+      <textarea id="importText" style="min-height:90px;margin-top:10px;font-family:ui-monospace,Menlo,monospace;font-size:12px" placeholder="Paste backup here"></textarea>
+      <button class="btn" id="importGo">Restore</button>
+    </div>
+    <textarea id="exportText" hidden readonly style="min-height:90px;margin-top:10px;font-family:ui-monospace,Menlo,monospace;font-size:12px"></textarea>
+    <button class="btn danger" id="resetAll">Clear everything</button>
+    <p class="small">Everything here is saved on this device only.</p>
+  </div>
 </div>
-<p class="note">The tournament and camp tools save what you enter on this device only. Nothing typed into them is shared or uploaded.</p>
+
+<script>
+/* ---------- state ---------- */
+const KEY = "soccer-matchday-v1";
+const COLORS = ["#f6a8d8","#a8e6b8","#fcd98a","#b9c8f5","#f7b59a","#9ed8e0","#d6b8f0","#e0e6a0","#f5a3a3","#c7d0d8"];
+let S = {
+  step: "players", names: "", teamCount: 2, teams: [],
+  format: null, pendingFormat: null,
+  matches: [],            // {id, round, home, away, done, winner, next:{id,side}|null}
+  singlePick: [], goals: [], live: null, playTab: "fixtures"
+};
+const uid = () => Math.random().toString(36).slice(2, 9);
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    if (raw) { Object.assign(S, JSON.parse(raw)); return; }
+    // First run: carry over the roster from the old camp toolkit if there is one
+    const old = JSON.parse(localStorage.getItem("soccerCampToolkitState") || "null");
+    if (old && typeof old.namesText === "string") S.names = old.namesText;
+  }catch(e){}
+}
+const names = () => S.names.split("\n").map(n => n.trim()).filter(Boolean);
+
+const team = id => S.teams.find(t => t.id === id);
+const tname = id => team(id)?.name ?? "TBD";
+const inComp = () => !!S.format;
+const score = (m, side) => S.goals.filter(g => g.matchId === m.id && g.teamId === m[side]).length;
+
+/* ---------- navigation ---------- */
+function canGo(step){
+  if (step === "players" || step === "teams") return true;
+  if (step === "format") return S.teams.length >= 2;
+  if (step === "play") return inComp();
+}
+function go(step, fromHistory){
+  if (!canGo(step)) return;
+  if (!fromHistory) { if (step !== S.step) history.pushState({ step, live: null }, ""); S.live = null; }
+  S.step = step; save(); render(); window.scrollTo(0,0);
+}
+function openLive(id){ S.live = id; history.pushState({ step: "play", live: id }, ""); save(); renderPlay(); window.scrollTo(0,0); }
+window.addEventListener("popstate", e => {
+  const st = e.state || { step: "players", live: null };
+  armed = null; scorerDraft = "";
+  S.live = st.live && byId(st.live) ? st.live : null;
+  go(canGo(st.step) ? st.step : "players", true);
+});
+$("steps").addEventListener("click", e => { const b = e.target.closest("button"); if (b) go(b.dataset.step); });
+document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => go(b.dataset.go)));
+
+/* ---------- players ---------- */
+function setNames(list){ S.names = list.join("\n"); save(); renderCounts(); renderToday(); }
+function renderToday(){
+  const list = names();
+  $("today").innerHTML = list.length ? list.map((n,i) => `<span class="chip">${esc(n)}<button type="button" data-rm="${i}" aria-label="Remove ${esc(n)}">✕</button></span>`).join("")
+    : `<span class="small">Load a roster above or add names below.</span>`;
+  $("todayHint").hidden = !list.length; $("clearWrap").hidden = !list.length;
+  if (!editing) renderRosters();
+}
+$("today").addEventListener("click", e => {
+  const b = e.target.closest("[data-rm]"); if (!b) return;
+  const list = names(); list.splice(+b.dataset.rm, 1); setNames(list);
+});
+function addTyped(){
+  const typed = $("addNames").value.split(/[\n,]/).map(x => x.trim()).filter(Boolean);
+  if (!typed.length) return;
+  addToNames(typed); $("addNames").value = ""; $("addNames").style.height = "46px";
+}
+$("addBtn").addEventListener("click", addTyped);
+$("addNames").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey && !$("addNames").value.includes("\n")) { e.preventDefault(); addTyped(); } });
+$("addNames").addEventListener("input", e => { const t = e.target; t.style.height = "46px"; if (t.value.includes("\n")) t.style.height = Math.min(t.scrollHeight, 220) + "px"; });
+let clearArmed = false, clearTimer;
+$("clearToday").addEventListener("click", () => {
+  if (!clearArmed) { clearArmed = true; $("clearToday").textContent = "Tap again to clear"; clearTimer = setTimeout(() => { clearArmed = false; $("clearToday").textContent = "Clear list"; }, 2500); return; }
+  clearTimeout(clearTimer); clearArmed = false; $("clearToday").textContent = "Clear list"; setNames([]);
+});
+function renderCounts(){
+  const n = names().length;
+  $("nameCount").textContent = n ? String(n) : "";
+  const h = names().length, k = S.teamCount, base = Math.floor(h/k), extra = h%k;
+  $("sizeNote").textContent = h === 0 ? `${k} empty teams to name yourself` :
+    extra === 0 ? `${k} teams of ${base}` : `${extra} team${extra===1?"":"s"} of ${base+1}, ${k-extra} of ${base}`;
+}
+
+/* ---------- saved rosters (kept separately so "Clear everything" leaves them alone) ---------- */
+const RKEY = "soccer-rosters-v1";
+let rosters = [];
+try { rosters = JSON.parse(localStorage.getItem(RKEY) || "[]"); } catch(e) { rosters = []; }
+const saveRosters = () => { try { localStorage.setItem(RKEY, JSON.stringify(rosters)); } catch(e) {} };
+const b64e = str => btoa(unescape(encodeURIComponent(str))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+const b64d = str => decodeURIComponent(escape(atob(str.replace(/-/g,"+").replace(/_/g,"/"))));
+function upsertRoster(name, players){
+  const i = rosters.findIndex(r => r.name.toLowerCase() === name.toLowerCase());
+  if (i >= 0) rosters[i].players = players; else rosters.push({ id: uid(), name, players });
+  saveRosters();
+}
+function addToNames(players){
+  const have = new Set(names().map(n => n.toLowerCase()));
+  const add = players.filter(p => !have.has(p.toLowerCase()));
+  setNames([...names(), ...add]);
+  return add.length;
+}
+let editing = null;   // {id|null, name, players[]}
+const rosterStatus = r => { const have = new Set(names().map(n => n.toLowerCase()));
+  const n = r.players.filter(p => have.has(p.toLowerCase())).length;
+  return n === 0 ? "" : n === r.players.length ? "In today's list ✓" : `${n} of ${r.players.length} in list`; };
+function renderRosters(){
+  $("rosterPanel").hidden = !!editing; $("rosterEditor").hidden = !editing;
+  if (editing) { renderEditor(); return; }
+  $("rosterList").innerHTML = rosters.length ? rosters.map(r => { const st = rosterStatus(r); return `
+    <div class="roster">
+      <button class="rload ${st?"on":""}" data-rtoggle="${r.id}"><b>${esc(r.name)}</b><span>${r.players.length} player${r.players.length===1?"":"s"}${st?` · <span class="st">${st}</span>`:""}</span></button>
+      <button class="mini" data-redit="${r.id}">Edit</button>
+      <button class="mini" data-rshare="${r.id}">Share</button>
+    </div>`; }).join("") : `<div class="small">No rosters yet. Tap "+ New roster" to make one.</div>`;
+}
+function renderEditor(){
+  $("edCount").textContent = `(${editing.players.length})`;
+  $("edList").innerHTML = editing.players.length ? editing.players.map((n,i) => `<span class="chip">${esc(n)}<button type="button" data-edrm="${i}" aria-label="Remove ${esc(n)}">✕</button></span>`).join("") : `<span class="small">No players yet.</span>`;
+  $("edDelete").hidden = !editing.id;
+}
+function openEditor(r){
+  editing = r ? { id: r.id, name: r.name, players: [...r.players] } : { id: null, name: "", players: [] };
+  $("edName").value = editing.name; $("edAdd").value = ""; renderRosters();
+  $("rosterEditor").scrollIntoView({ block: "start" }); if (!r) $("edName").focus();
+}
+$("newRoster").addEventListener("click", () => openEditor(null));
+$("edName").addEventListener("input", e => editing.name = e.target.value);
+$("edList").addEventListener("click", e => { const b = e.target.closest("[data-edrm]"); if (!b) return; editing.players.splice(+b.dataset.edrm, 1); renderEditor(); });
+function edAdd(){
+  const have = new Set(editing.players.map(n => n.toLowerCase()));
+  $("edAdd").value.split(/[\n,]/).map(x => x.trim()).filter(Boolean).forEach(n => { if (!have.has(n.toLowerCase())) { editing.players.push(n); have.add(n.toLowerCase()); } });
+  $("edAdd").value = ""; $("edAdd").style.height = "46px"; renderEditor();
+}
+$("edAddBtn").addEventListener("click", edAdd);
+$("edAdd").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey && !$("edAdd").value.includes("\n")) { e.preventDefault(); edAdd(); } });
+$("edAdd").addEventListener("input", e => { const t = e.target; t.style.height = "46px"; if (t.value.includes("\n")) t.style.height = Math.min(t.scrollHeight, 220) + "px"; });
+$("edSave").addEventListener("click", () => {
+  if ($("edAdd").value.trim()) edAdd();
+  const nm = editing.name.trim();
+  if (!nm) { $("edName").focus(); $("edName").placeholder = "Give the roster a name"; return; }
+  const clash = rosters.find(r => r.name.toLowerCase() === nm.toLowerCase() && r.id !== editing.id);
+  if (clash) { $("edName").value = ""; editing.name = ""; $("edName").placeholder = `"${nm}" already exists`; $("edName").focus(); return; }
+  if (editing.id) Object.assign(rosters.find(r => r.id === editing.id), { name: nm, players: editing.players });
+  else rosters.push({ id: uid(), name: nm, players: editing.players });
+  saveRosters(); editing = null; renderRosters();
+});
+$("edCancel").addEventListener("click", () => { editing = null; renderRosters(); });
+let edDelArmed = false, edDelTimer;
+$("edDelete").addEventListener("click", () => {
+  if (!edDelArmed) { edDelArmed = true; $("edDelete").textContent = "Tap again to delete"; edDelTimer = setTimeout(() => { edDelArmed = false; $("edDelete").textContent = "Delete this roster"; }, 2500); return; }
+  clearTimeout(edDelTimer); edDelArmed = false; $("edDelete").textContent = "Delete this roster";
+  rosters = rosters.filter(r => r.id !== editing.id); saveRosters(); editing = null; renderRosters();
+});
+$("rosterList").addEventListener("click", async e => {
+  const tog = e.target.closest("[data-rtoggle]"), ed = e.target.closest("[data-redit]"), share = e.target.closest("[data-rshare]");
+  if (tog) {
+    const r = rosters.find(x => x.id === tog.dataset.rtoggle);
+    if (rosterStatus(r) === "In today's list ✓") { const out = new Set(r.players.map(p => p.toLowerCase())); setNames(names().filter(n => !out.has(n.toLowerCase()))); }
+    else addToNames(r.players);
+    renderRosters(); return;
+  }
+  if (ed) { openEditor(rosters.find(x => x.id === ed.dataset.redit)); return; }
+  if (share) {
+    const r = rosters.find(x => x.id === share.dataset.rshare);
+    const url = location.href.split("#")[0] + "#roster=" + b64e(JSON.stringify({ n: r.name, p: r.players }));
+    try {
+      if (navigator.share) { await navigator.share({ title: `${r.name} roster`, text: `${r.name} roster for Match day`, url }); return; }
+      await navigator.clipboard.writeText(url); share.textContent = "Copied"; setTimeout(renderRosters, 1800);
+    } catch (err) { if (err && err.name === "AbortError") return; window.prompt("Copy this link:", url); }
+  }
+});
+// A shared roster link: #roster=... (never sent to the server). Offer to save it, then clean the URL.
+function checkIncoming(){
+  const m = location.hash.match(/^#roster=([A-Za-z0-9_-]+)$/); if (!m) return;
+  history.replaceState(null, "", location.pathname + location.search);
+  let data; try { data = JSON.parse(b64d(m[1])); } catch(e) { return; }
+  if (!data || typeof data.n !== "string" || !Array.isArray(data.p)) return;
+  const players = data.p.map(x => String(x).trim()).filter(Boolean).slice(0, 60), nm = data.n.trim().slice(0, 60) || "Shared roster";
+  const exists = rosters.some(r => r.name.toLowerCase() === nm.toLowerCase());
+  S.step = "players";
+  $("incoming").hidden = false;
+  $("incoming").innerHTML = `<label class="l">Roster shared with you: ${esc(nm)}</label>
+    <div class="small">${players.map(esc).join(", ")}</div>
+    <div class="row" style="margin-top:10px"><button class="mini primary" id="inSave">${exists?"Replace my copy":"Save to this device"}</button><button class="mini" id="inSkip">No thanks</button></div>`;
+  $("inSave").onclick = () => { upsertRoster(nm, players); $("incoming").hidden = true; renderRosters(); };
+  $("inSkip").onclick = () => { $("incoming").hidden = true; };
+}
+
+/* ---------- teams ---------- */
+for (let n = 2; n <= 16; n++) $("teamCount").insertAdjacentHTML("beforeend", `<option value="${n}">${n} teams</option>`);
+$("teamCount").addEventListener("change", e => { S.teamCount = +e.target.value; save(); renderCounts(); });
+let shuffleArmed = false, shuffleTimer;
+$("shuffle").addEventListener("click", () => {
+  if (inComp() && !shuffleArmed) {
+    shuffleArmed = true; $("shuffle").textContent = "Tap again: this ends the current competition";
+    shuffleTimer = setTimeout(() => { shuffleArmed = false; $("shuffle").textContent = "Shuffle into teams"; }, 3000);
+    return;
+  }
+  clearTimeout(shuffleTimer); shuffleArmed = false; $("shuffle").textContent = "Shuffle into teams";
+  const pool = names();
+  for (let i = pool.length-1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [pool[i],pool[j]] = [pool[j],pool[i]]; }
+  const k = S.teamCount;
+  S.teams = Array.from({length:k}, (_,i) => ({ id: uid(), name: S.teams[i]?.name ?? `Team ${i+1}`, color: COLORS[i%COLORS.length], players: [] }));
+  pool.forEach((p,i) => S.teams[i%k].players.push(p));
+  endComp(); save(); render();
+});
+function renderTeams(){
+  $("teamCount").value = S.teamCount;
+  $("lockNote").hidden = !inComp();
+  $("teamTip").hidden = !S.teams.length;
+  $("toFormat").disabled = S.teams.length < 2;
+  $("teamList").innerHTML = S.teams.map((t,i) => `
+    <div class="team" style="--c:${t.color}">
+      <input class="tname" type="text" value="${esc(t.name)}" data-team="${t.id}" aria-label="Team ${i+1} name">
+      <div class="cnt">${t.players.length} player${t.players.length===1?"":"s"}</div>
+      ${t.players.length ? `<ul>${t.players.map((p,pi) => `<li data-team="${t.id}" data-p="${pi}" title="Move to next team">${esc(p)}</li>`).join("")}</ul>` : ""}
+    </div>`).join("");
+}
+$("teamList").addEventListener("input", e => {
+  if (!e.target.matches("input.tname")) return;
+  team(e.target.dataset.team).name = e.target.value.trim() || "Unnamed"; save();
+});
+$("teamList").addEventListener("click", e => {
+  const li = e.target.closest("li[data-p]"); if (!li) return;
+  const i = S.teams.findIndex(t => t.id === li.dataset.team);
+  const [p] = S.teams[i].players.splice(+li.dataset.p, 1);
+  S.teams[(i+1) % S.teams.length].players.push(p);
+  save(); renderTeams();
+});
+
+/* ---------- format ---------- */
+$("formats").addEventListener("click", e => {
+  const b = e.target.closest(".fmt"); if (!b || b.disabled) return;
+  S.pendingFormat = b.dataset.fmt; save(); renderFormat();
+});
+function renderFormat(){
+  const f = S.pendingFormat ?? S.format;
+  document.querySelectorAll(".fmt").forEach(b => b.classList.toggle("on", b.dataset.fmt === f));
+  const n = S.teams.length;
+  const notes = {
+    single: "Pick the two teams on the next screen. Play as many games as you like.",
+    roundrobin: `${n*(n-1)/2} games over ${n%2 ? n : n-1} rounds.` + (n%2 ? " One team sits out each round." : ""),
+    knockout: (() => { let s=1; while(s<n) s*=2; const byes=s-n; return `${Math.log2(s)} rounds.` + (byes ? ` ${byes} team${byes===1?" gets a bye":"s get byes"} into round 2, in team order.` : ""); })()
+  };
+  $("fmtNote").textContent = f ? notes[f] : "";
+  const same = f === S.format;
+  $("startComp").disabled = !f;
+  $("startComp").textContent = !f ? "Start" : same ? "Continue" : inComp() ? "Start over with this format" : "Start";
+}
+let startArmed = false, startTimer;
+$("startComp").addEventListener("click", () => {
+  const f = S.pendingFormat ?? S.format;
+  if (f === S.format) { go("play"); return; }
+  if (inComp() && S.goals.length && !startArmed) {
+    startArmed = true; $("startComp").textContent = "Tap again: current results will be cleared";
+    startTimer = setTimeout(() => { startArmed = false; renderFormat(); }, 3000); return;
+  }
+  clearTimeout(startTimer); startArmed = false;
+  startComp(f); go("play");
+});
+function endComp(){ S.format = null; S.pendingFormat = null; S.matches = []; S.goals = []; S.live = null; S.singlePick = []; }
+function startComp(f){
+  S.format = f; S.pendingFormat = null; S.matches = []; S.goals = []; S.live = null; S.singlePick = []; S.playTab = "fixtures";
+  const ids = S.teams.map(t => t.id);
+  if (f === "roundrobin") {
+    const t = [...ids]; if (t.length % 2) t.push(null);
+    const n = t.length;
+    for (let r = 0; r < n-1; r++) {
+      for (let i = 0; i < n/2; i++) {
+        const h = t[i], a = t[n-1-i];
+        if (h && a) S.matches.push({ id: uid(), round: r, home: h, away: a, done: false, winner: null });
+      }
+      t.splice(1, 0, t.pop());
+    }
+  }
+  if (f === "knockout") {
+    let size = 1; while (size < ids.length) size *= 2;
+    const rounds = Math.log2(size);
+    // build empty tree, then fill round 0; standard pairing 1v last so top seeds get the byes
+    const tree = [];
+    for (let r = 0; r < rounds; r++) {
+      tree.push(Array.from({length: size/2**(r+1)}, () => ({ id: uid(), round: r, home: null, away: null, done: false, winner: null, next: null })));
+    }
+    for (let r = 0; r < rounds-1; r++) tree[r].forEach((m,i) => m.next = { id: tree[r+1][Math.floor(i/2)].id, side: i%2 ? "away" : "home" });
+    const seeds = [...ids]; while (seeds.length < size) seeds.push(null);
+    // bracket order so seeds 1 and 2 can only meet in the final
+    let order = [0]; while (order.length < size) order = order.flatMap(s => [s, 2*order.length-1-s]);
+    tree[0].forEach((m,i) => { m.home = seeds[order[2*i]]; m.away = seeds[order[2*i+1]]; });
+    S.matches = tree.flat();
+    tree[0].forEach(m => { if (!m.home || !m.away) finish(m, m.home || m.away, true); });
+  }
+}
+
+/* ---------- play ---------- */
+const byId = id => S.matches.find(m => m.id === id);
+function finish(m, winner, bye){
+  m.done = true; m.winner = winner; m.bye = !!bye;
+  if (m.next && winner) byId(m.next.id)[m.next.side] = winner;
+}
+function roundName(r){
+  if (S.format !== "knockout") return `Round ${r+1}`;
+  const total = Math.max(...S.matches.map(m => m.round)) + 1, left = total - r;
+  return left === 1 ? "Final" : left === 2 ? "Semifinals" : left === 3 ? "Quarterfinals" : `Round ${r+1}`;
+}
+function matchRow(m){
+  const hs = score(m,"home"), as = score(m,"away"), started = S.goals.some(g => g.matchId === m.id);
+  const ready = m.home && m.away && !m.bye;
+  const cls = ["match", S.live === m.id ? "live" : "", m.done ? "done" : ""].join(" ");
+  const side = s => { const id = m[s];
+    if (!id) return `<span class="t tbd ${s==="home"?"h":""}">${m.bye ? "Bye" : "TBD"}</span>`;
+    const t = team(id); const win = m.done && m.winner === id && S.format === "knockout";
+    return `<span class="t ${s==="home"?"h":""} ${win?"win":""}">${s==="away"?`<span class="dot" style="--c:${t.color}"></span>`:""}${esc(t.name)}${s==="home"?`<span class="dot" style="--c:${t.color}"></span>`:""}</span>`; };
+  const mid = m.bye ? "—" : (started || m.done) ? `${hs}–${as}` : "vs";
+  return `<button class="${cls}" data-match="${m.id}" ${ready?"":"disabled"}>${side("home")}<span class="s">${mid}</span>${side("away")}</button>`;
+}
+function standings(){
+  const T = {}; S.teams.forEach(t => T[t.id] = { t, p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0 });
+  S.matches.filter(m => m.done).forEach(m => {
+    const h = score(m,"home"), a = score(m,"away"), H = T[m.home], A = T[m.away];
+    H.p++; A.p++; H.gf += h; H.ga += a; A.gf += a; A.ga += h;
+    if (h > a) { H.w++; H.pts += 3; A.l++; } else if (a > h) { A.w++; A.pts += 3; H.l++; } else { H.d++; A.d++; H.pts++; A.pts++; }
+  });
+  return Object.values(T).sort((x,y) => y.pts-x.pts || (y.gf-y.ga)-(x.gf-x.ga) || y.gf-x.gf);
+}
+function scorers(){
+  const c = {}; S.goals.forEach(g => { const k = g.player || "Unnamed scorer"; c[k] = (c[k]||0) + 1; });
+  return Object.entries(c).sort((a,b) => b[1]-a[1]);
+}
+function renderPlay(){
+  document.querySelector(".foot").hidden = !!S.live;
+  if (S.live) { $("playList").hidden = true; $("liveBoard").hidden = false; renderLive(); return; }
+  $("playList").hidden = false; $("liveBoard").hidden = true;
+  const title = { single: "Single games", roundrobin: "Round robin", knockout: "Knockout" }[S.format];
+  const tabs = S.format === "roundrobin" ? ["fixtures","standings","scorers"] : ["fixtures","scorers"];
+  if (!tabs.includes(S.playTab)) S.playTab = "fixtures";
+  let h = `<button class="linkbtn back" data-goformat>← Back to format</button><h2>${title}</h2><div class="tabs">${tabs.map(t => `<button data-tab="${t}" class="${S.playTab===t?"on":""}">${{fixtures:S.format==="single"?"Games":"Fixtures",standings:"Standings",scorers:"Scorers"}[t]}</button>`).join("")}</div>`;
+  if (S.playTab === "fixtures") {
+    if (S.format === "single") {
+      h += `<div class="panel"><label class="l">New game: pick two teams</label><div class="pick">${S.teams.map(t =>
+        `<button class="fmt ${S.singlePick.includes(t.id)?"on":""}" data-pick="${t.id}" style="padding:10px"><b style="font-size:1.15rem"><span class="dot" style="--c:${t.color};margin-left:0"></span>${esc(t.name)}</b></button>`).join("")}</div>
+        <button class="btn" id="newGame" ${S.singlePick.length===2?"":"disabled"}>Start game</button></div>`;
+      const games = [...S.matches].reverse();
+      h += games.length ? `<div class="rlabel">Games</div>` + games.map(matchRow).join("") : "";
+    } else {
+      if (S.format === "knockout") {
+        const fin = S.matches.find(m => !m.next);
+        if (fin?.done) h += `<div class="champ"><div class="small">Champions</div><b>${esc(tname(fin.winner))}</b></div>`;
+      }
+      const played = S.matches.filter(m => m.done && !m.bye).length, total = S.matches.filter(m => !m.bye).length;
+      h += `<p class="small">${played} of ${total} games played. Tap a game to keep score.</p>`;
+      const rounds = [...new Set(S.matches.map(m => m.round))];
+      rounds.forEach(r => { h += `<div class="rlabel">${roundName(r)}</div>` + S.matches.filter(m => m.round === r).map(matchRow).join(""); });
+    }
+  }
+  if (S.playTab === "standings") {
+    h += `<table class="std"><thead><tr><th>#</th><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>Pts</th></tr></thead><tbody>` +
+      standings().map((r,i) => `<tr><td>${i+1}</td><td><span class="dot" style="--c:${r.t.color};margin-left:0"></span>${esc(r.t.name)}</td><td>${r.p}</td><td>${r.w}</td><td>${r.d}</td><td>${r.l}</td><td>${r.gf-r.ga>0?"+":""}${r.gf-r.ga}</td><td><b>${r.pts}</b></td></tr>`).join("") + `</tbody></table>`;
+  }
+  if (S.playTab === "scorers") {
+    const sc = scorers();
+    h += `<div class="panel">${sc.length ? sc.map(([p,n]) => `<div class="leader"><span>${esc(p)}</span><b>${n}</b></div>`).join("") : `<div class="empty">No goals yet</div>`}</div>`;
+  }
+  $("playList").innerHTML = h;
+}
+$("playList").addEventListener("click", e => {
+  if (e.target.closest("[data-goformat]")) { go("format"); return; }
+  const tab = e.target.closest("[data-tab]"); if (tab) { S.playTab = tab.dataset.tab; save(); renderPlay(); return; }
+  const pk = e.target.closest("[data-pick]");
+  if (pk) { const id = pk.dataset.pick, i = S.singlePick.indexOf(id);
+    if (i >= 0) S.singlePick.splice(i,1); else { if (S.singlePick.length === 2) S.singlePick.shift(); S.singlePick.push(id); }
+    save(); renderPlay(); return; }
+  if (e.target.closest("#newGame")) {
+    const m = { id: uid(), round: 0, home: S.singlePick[0], away: S.singlePick[1], done: false, winner: null };
+    S.matches.push(m); S.singlePick = []; save(); openLive(m.id); return; }
+  const mb = e.target.closest("[data-match]");
+  if (mb && !mb.disabled) openLive(mb.dataset.match);
+});
+
+/* ---------- live board ---------- */
+let armed = null, armTimer, scorerDraft = "";
+function renderLive(){
+  const m = byId(S.live); if (!m) { S.live = null; renderPlay(); return; }
+  const H = team(m.home), A = team(m.away), hs = score(m,"home"), as = score(m,"away");
+  const log = S.goals.filter(g => g.matchId === m.id).reverse();
+  const roster = [...H.players, ...A.players];
+  const ko = S.format === "knockout", tied = hs === as;
+  const nextStarted = m.next && (() => { const n = byId(m.next.id); return n.done || S.goals.some(g => g.matchId === n.id); })();
+  let h = `<button class="btn ghost" id="back" style="margin-top:0">← All games</button>
+    <div class="live-head">${S.format==="single" ? "Single game" : esc(roundName(m.round))}${m.done ? " · Final" : ""}</div>
+    <div class="scores">
+      ${[["home",H,hs],["away",A,as]].map(([s,t,n]) => `<button class="sbtn ${armed===s?"armed":""}" data-side="${s}" style="--c:${t.color}" ${m.done?"disabled":""}>
+        <span class="nm">${esc(t.name)}</span><span class="num">${n}</span><span class="tap">${m.done ? "" : armed===s ? "Tap again to confirm" : "Tap to score"}</span></button>`).join("")}
+    </div>`;
+  if (!m.done) {
+    h += `<div class="panel" style="margin-top:12px"><label class="l" for="scorer">Scorer (optional)</label>
+      <input type="text" id="scorer" list="rosterList" placeholder="Type or pick a name" autocomplete="off" value="${esc(scorerDraft)}">
+      <datalist id="rosterList">${roster.map(p => `<option value="${esc(p)}">`).join("")}</datalist>
+      <div class="hint">Pick the scorer first, then tap their team twice.</div></div>
+      <button class="btn ghost" id="undo" ${log.length?"":"disabled"}>Undo last goal</button>`;
+    if (ko && tied) {
+      h += `<div class="panel" style="margin-top:12px"><label class="l">Level. Who goes through?</label><div class="pick">
+        <button class="btn" data-adv="home" style="margin-top:0">${esc(H.name)}</button><button class="btn" data-adv="away" style="margin-top:0">${esc(A.name)}</button></div>
+        <div class="hint">Decide it however you like (penalties, next goal), then pick the winner.</div></div>`;
+    } else {
+      h += `<button class="btn" id="whistle">Final whistle</button>`;
+    }
+  } else {
+    h += (ko && nextStarted) ? `<p class="small" style="text-align:center;margin-top:12px">Locked: the next round has started.</p>`
+      : `<button class="btn ghost" id="reopen">Reopen this game</button>`;
+  }
+  h += `<div class="panel log" style="margin-top:12px"><label class="l">Goals</label>${log.length ? log.map(g =>
+    `<div class="e"><div><div class="who">${esc(g.player || "Unnamed scorer")}</div><div class="meta">${esc(tname(g.teamId))}</div></div><div class="meta">${new Date(g.ts).toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})}</div></div>`).join("") : `<div class="empty">No goals yet</div>`}</div>`;
+  $("liveBoard").innerHTML = h;
+}
+$("liveBoard").addEventListener("input", e => { if (e.target.id === "scorer") scorerDraft = e.target.value; });
+$("liveBoard").addEventListener("click", e => {
+  const m = byId(S.live);
+  if (e.target.closest("#back")) { history.back(); return; }
+  const sb = e.target.closest(".sbtn");
+  if (sb && !m.done) {
+    const side = sb.dataset.side; clearTimeout(armTimer);
+    if (armed === side) {
+      S.goals.push({ id: uid(), matchId: m.id, teamId: m[side], player: scorerDraft.trim(), ts: Date.now() });
+      armed = null; scorerDraft = ""; save(); renderLive(); return;
+    }
+    armed = side; renderLive(); armTimer = setTimeout(() => { armed = null; renderLive(); }, 2500); return;
+  }
+  if (e.target.closest("#undo")) {
+    for (let i = S.goals.length-1; i >= 0; i--) if (S.goals[i].matchId === m.id) { S.goals.splice(i,1); break; }
+    save(); renderLive(); return;
+  }
+  if (e.target.closest("#whistle")) {
+    const hs = score(m,"home"), as = score(m,"away");
+    finish(m, hs > as ? m.home : as > hs ? m.away : null);
+    save(); history.back(); return;
+  }
+  const adv = e.target.closest("[data-adv]");
+  if (adv) { finish(m, m[adv.dataset.adv]); save(); history.back(); return; }
+  if (e.target.closest("#reopen")) {
+    if (m.next && m.winner) { const n = byId(m.next.id); if (n[m.next.side] === m.winner) n[m.next.side] = null; }
+    m.done = false; m.winner = null; save(); renderLive(); return;
+  }
+});
+
+/* ---------- backup / reset ---------- */
+$("exportBtn").addEventListener("click", async () => {
+  const json = JSON.stringify(S);
+  try { await navigator.clipboard.writeText(json); $("exportBtn").textContent = "Copied"; setTimeout(() => $("exportBtn").textContent = "Copy backup", 2000); }
+  catch { $("exportText").hidden = false; $("exportText").value = json; $("exportText").select(); }
+});
+$("importBtn").addEventListener("click", () => { $("importBox").hidden = !$("importBox").hidden; });
+$("importGo").addEventListener("click", () => {
+  try { const d = JSON.parse($("importText").value); if (!Array.isArray(d.teams)) throw 0;
+    S = Object.assign(S, d); save(); $("importBox").hidden = true; $("importText").value = ""; render();
+  } catch { $("importText").value = ""; $("importText").placeholder = "That isn't a valid backup. Paste the whole thing."; }
+});
+let resetArmed = false, resetTimer;
+$("resetAll").addEventListener("click", () => {
+  if (!resetArmed) { resetArmed = true; $("resetAll").classList.add("armed"); $("resetAll").textContent = "Tap again: erases names, teams and results";
+    resetTimer = setTimeout(() => { resetArmed = false; $("resetAll").classList.remove("armed"); $("resetAll").textContent = "Clear everything"; }, 3000); return; }
+  clearTimeout(resetTimer); try { localStorage.removeItem(KEY); } catch(e) {} location.reload();
+});
+
+/* ---------- render ---------- */
+function render(){
+  document.querySelectorAll("#steps button").forEach(b => { b.classList.toggle("on", b.dataset.step === S.step); b.disabled = !canGo(b.dataset.step); });
+  ["players","teams","format","play"].forEach(s => $("s-"+s).hidden = S.step !== s);
+  document.querySelector(".foot").hidden = S.step === "play" && !!S.live;
+  if (S.step === "players") { renderCounts(); renderRosters(); renderToday(); }
+  if (S.step === "teams") { renderCounts(); renderTeams(); }
+  if (S.step === "format") renderFormat();
+  if (S.step === "play") renderPlay();
+}
+load(); checkIncoming(); if (!canGo(S.step)) S.step = "players";
+S.live = null;
+history.replaceState({ step: S.step, live: null }, ""); render();
+</script>
 </body>
 </html>
