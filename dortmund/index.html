@@ -176,7 +176,7 @@ tr.up.fv-o td:first-child{box-shadow:inset 4px 0 0 rgba(232,116,42,.8)}tr.up.fv-
 <main>
   <header class="band">
     <h1>FC Westlake GU11 Dortmund</h1>
-    <p class="sub">CTX Premier League, Fall 2026. GU11 CTX I, Bracket B (Premier I). Results from PlayMetrics as of Oct 3, 2026.</p>
+    <p class="sub">CTX Premier League, Fall 2026. GU11 CTX I, Bracket B (Premier I). Results from PlayMetrics as of Oct 13, 2026.</p>
   </header>
   <div class="ladder" id="ladder"></div>
   <div class="record" id="record"></div>
@@ -212,7 +212,7 @@ const strip = s => s.replace(/\s*STXCL[- ]WC GU12.*$/,"").trim();
 const key = s => strip(s).toLowerCase();
 const same = (a,b) => key(a)===key(b);
 
-// Every GU11 CTX I Bracket B match played so far (PlayMetrics, as of Oct 2 2026). Scores home–away.
+// Every GU11 CTX I Bracket B match played so far (PlayMetrics, as of Oct 13 2026). Scores home–away.
 const results = [
   ["2026-09-12","DS Stars GU10 Maroon",0,3,"LTFC U11G White"],
   ["2026-09-12","FC Westlake GU11 Liverpool",5,3,"GalaxySC CTXPL GU10 Black"],
@@ -229,6 +229,10 @@ const results = [
   ["2026-09-27","FC Westlake GU11 Dortmund",7,2,"LTFC U11G White"],
   ["2026-09-27","Pflugerville FC GU11 Blue",3,2,"DS Stars GU10 Maroon"],
   ["2026-09-27","LTFC GU10 Premier II",3,0,"FC Westlake GU11 Liverpool"],
+  ["2026-10-10","DS Stars GU11 Silver",0,3,"LTFC GU10 Premier II"],
+  ["2026-10-10","FC Westlake GU11 Liverpool",0,0,"DS Stars GU10 Maroon"],
+  ["2026-10-10","Pflugerville FC GU11 Blue",3,5,"FC Westlake GU11 Dortmund"],
+  ["2026-10-11","DS Stars GU11 Silver",1,5,"FC Westlake GU11 Dortmund"],
 ].map(([date,home,hs,as,away])=>({date,home,hs,as,away}));
 
 // Scrimmages: ours first. Kept out of league standings, matchup colors and scouting.
@@ -239,12 +243,10 @@ const scrimmages = [
 // kit: away = all navy (bring white/gold); home = white/gold (bring navy)
 const AWAY_KIT="All navy, bring white/gold", HOME_KIT="White/gold, bring navy";
 const upcoming = [
-  {date:null, time:"TBD", opp:"Lonestar ATX GU11 Rattlers NTH", venue:"TBD", kit:AWAY_KIT},
-  {date:"2026-10-10", time:"2:30 PM", opp:"Pflugerville FC GU11 Blue", venue:"Wells Point Park 1 (9v9)", kit:AWAY_KIT, status:"Rescheduled"},
-  {date:"2026-10-11", time:"9:00 AM", opp:"DS Stars GU11 Silver", venue:"DSYSA Sports & Rec Park 12-1", kit:AWAY_KIT},
   {date:"2026-10-17", time:"4:00 PM", opp:"GalaxySC CTXPL GU10 Black", venue:"Clay Madsen Soccer Fields 1 A", kit:AWAY_KIT},
   {date:"2026-10-18", time:"5:00 PM", opp:"LTFC GU10 Premier II", venue:"Bee Creek Sports Complex, Field 4 B", kit:AWAY_KIT},
   {date:"2026-10-25", time:"11:30 AM", opp:"FC Westlake GU11 Liverpool", venue:"Bridgepoint Elementary, Field 1", kit:HOME_KIT},
+  {date:"2026-11-01", time:"5:00 PM", opp:"Lonestar ATX GU11 Rattlers NTH", venue:"Westcreek, Field 3 East", kit:AWAY_KIT, status:"Rescheduled"},
   {date:"2026-11-08", time:"10:30 AM", opp:"DS Stars GU10 Maroon", venue:"DSYSA Sports & Rec Park 12-2", kit:AWAY_KIT, status:"Rescheduled"},
 ];
 const bracket = [
@@ -354,12 +356,12 @@ document.getElementById("scouting").innerHTML = upcoming.map((u,i)=>{
 document.querySelectorAll("a.jump").forEach(a=>a.addEventListener("click",()=>{
   const d=document.querySelector(a.getAttribute("href")); if(d) d.open=true; }));
 
-// CTX Premier League I, GU11 girls: two parallel brackets (PlayMetrics, Oct 2 2026).
+// CTX Premier League I, GU11 girls: two parallel brackets (PlayMetrics, Oct 13 2026).
 const tiers = {
   "CTX-A": {conf:"CTX Premier League I", name:"GU11 Bracket A", tier:"Premier I", teams:[
-    ["Force FC GU11 Blue","3-0-1"],["FC Westlake GU11 Blue","3-2-0"],["Cap City GU11 Sky South","3-0-0"],["LTFC GU11 Red","2-1-0"],
-    ["FC Westlake GU11 Arsenal","1-2-1"],["Lonestar ATX GU11 White STH","1-1-0"],["Lonestar ATX GU11 Eagles NTH","1-2-0"],
-    ["TC Premier SC GU11 Blue","0-2-0"],["FC Westlake GU11 Boca Juniors","0-4-0"]]},
+    ["Force FC GU11 Blue","4-0-1"],["FC Westlake GU11 Blue","4-2-0"],["LTFC GU11 Red","4-1-0"],["Cap City GU11 Sky South","3-1-0"],
+    ["FC Westlake GU11 Arsenal","2-3-1"],["Lonestar ATX GU11 White STH","2-2-0"],["Lonestar ATX GU11 Eagles NTH","1-4-0"],
+    ["FC Westlake GU11 Boca Juniors","1-5-0"],["TC Premier SC GU11 Blue","0-3-0"]]},
   "CTX-B": {conf:"CTX Premier League I", name:"GU11 Bracket B", tier:"Premier I", teams:null}, // filled from live table
 };
 tiers["CTX-B"].teams = table.map(r=>[strip(r.team), `${r.w}-${r.l}-${r.d}`]);
