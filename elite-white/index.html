@@ -175,7 +175,7 @@ tr.up.fv-o td:first-child{box-shadow:inset 4px 0 0 rgba(232,116,42,.8)}tr.up.fv-
 <main>
   <header class="band">
     <h1>FC Westlake Elite Central White GU12</h1>
-    <p class="sub">Pre-ECNL squad. STXCL Western Conference 2026–27, Girls U12 Bracket B (Tier 2). League results from GotSport as of Oct 3, 2026.</p>
+    <p class="sub">Pre-ECNL squad. STXCL Western Conference 2026–27, Girls U12 Bracket B (Tier 2). League results from GotSport as of Oct 13, 2026.</p>
   </header>
   <div class="ladder" id="ladder"></div>
   <div class="record" id="record"></div>
@@ -209,7 +209,8 @@ const strip = s => s.replace(/\s*STXCL[- ]WC GU12.*$/,"").trim();
 const key = s => strip(s).toLowerCase();
 const same = (a,b) => key(a)===key(b);
 
-// Every Bracket B match played so far (GotSport, as of Oct 2 2026). Scores home–away.
+// Every Bracket B match played so far (GotSport, as of Oct 13 2026). Scores home–away.
+// Rained out, not yet rescheduled: FC Westlake North v us (Oct 3), Lonestar ATX Gold NTH v TC PREMIER SC (Oct 4).
 const results = [
   ["2026-09-12","FC Westlake Elite Central White",7,0,"Lonestar ATX Silver NTH"],
   ["2026-09-12","Lonestar ATX Gold NTH",2,1,"HC United Walther"],
@@ -227,6 +228,7 @@ const results = [
   ["2026-09-26","HC United Walther",0,4,"Lonestar ATX Royal STH"],
   ["2026-09-26","Coyotes FC Navy",2,2,"LTFC Premier II"],
   ["2026-09-27","FC Westlake Elite Central White",4,0,"TC PREMIER SC"],
+  ["2026-10-03","LTFC Premier II",5,3,"Lonestar ATX White NTH"],
 ].map(([date,home,hs,as,away])=>({date,home,hs,as,away}));
 
 const upcoming = [
@@ -348,8 +350,8 @@ const tiers = {
     ["Lonestar ATX Red NW C","1-4-0"],["Sting CC Clitnovici","0-1-0"],["Lonestar ATX Royal NTH","0-4-0"]]},
   "WC-B": {conf:"STXCL Western Conference", name:"Girls U12 Bracket B", tier:"Tier 2 of 3", teams:null}, // filled from live table
   "WC-C": {conf:"STXCL Western Conference", name:"Girls U12 Bracket C", tier:"Tier 3 of 3", teams:[
-    ["FC Westlake Central White","4-0-0"],["LTFC Red","3-0-0"],["LIONS FC","3-1-0"],["Castroville United","3-1-0"],
-    ["FC Westlake Central Blue","2-1-1"],["DS Stars","1-1-2"],["Pflugerville FC Green","0-0-2"],["BLACK LIONS FC LIONESSES","0-2-1"],
+    ["FC Westlake Central White","4-0-0"],["LTFC Red","3-0-0"],["LIONS FC","3-1-0"],["FC Westlake Central Blue","3-1-1"],
+    ["Castroville United","3-2-0"],["DS Stars","1-1-2"],["Pflugerville FC Green","0-0-2"],["BLACK LIONS FC LIONESSES","0-2-1"],
     ["Coyotes FC White","0-3-0"],["SA City SC Blue","0-3-0"],["CTX Soccer Academy Spark","0-4-0"]]},
   "EC-U11-D": {conf:"STXCL Eastern Conference", name:"Girls U11 Bracket D", tier:"Bracket D of 4", teams:[
     ["Challenge Aggieland White","3-0-0"],["Coastal Premier II","2-0-1"],["AHFC West Premier II","2-1-0"],["HTX South White","2-1-0"],
