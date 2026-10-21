@@ -176,7 +176,7 @@ tr.up.fv-o td:first-child{box-shadow:inset 4px 0 0 rgba(232,116,42,.8)}tr.up.fv-
 <main>
   <header class="band">
     <h1>FC Westlake Central White GU12</h1>
-    <p class="sub">STXCL Western Conference 2026–27, Girls U12 Bracket C (Tier 3). Results from GotSport as of Oct 19, 2026.</p>
+    <p class="sub">STXCL Western Conference 2026–27, Girls U12 Bracket C (Tier 3). Results from GotSport as of Oct 20, 2026.</p>
   </header>
   <div class="ladder" id="ladder"></div>
   <div class="record" id="record"></div>
@@ -210,7 +210,7 @@ const strip = s => s.replace(/\s*STXCL WC GU12.*$/,"").trim();
 const key = s => strip(s).toLowerCase();
 const same = (a,b) => key(a)===key(b);
 
-// Every Bracket C match played so far (GotSport, as of Oct 19 2026). hs/as = null means no score reported.
+// Every Bracket C match played so far (GotSport, as of Oct 20 2026). hs/as = null means no score reported.
 const results = [
   ["2026-09-12","BLACK LIONS FC LIONESSES",1,2,"LTFC Red"],
   ["2026-09-12","FC Westlake Central Blue",2,2,"DS Stars"],
@@ -234,11 +234,11 @@ const results = [
   ["2026-09-27","Coyotes FC White",null,null,"Pflugerville FC Green"],
   ["2026-10-04","Castroville United",0,2,"FC Westlake Central Blue"],
   ["2026-10-17","BLACK LIONS FC LIONESSES",3,0,"Castroville United"],
-  ["2026-10-17","LTFC Red",null,null,"DS Stars"],
+  ["2026-10-17","LTFC Red",1,2,"DS Stars"],
   ["2026-10-17","Pflugerville FC Green",0,3,"LIONS FC"],
-  ["2026-10-17","Coyotes FC White",null,null,"SA City SC Blue"],
+  ["2026-10-17","Coyotes FC White",1,2,"SA City SC Blue"],
   ["2026-10-18","CTX Soccer Academy Spark",2,3,"FC Westlake Central White"],
-  ["2026-10-18","LTFC Red",null,null,"Pflugerville FC Green"],
+  ["2026-10-18","LTFC Red",2,0,"Pflugerville FC Green"],
 ].map(([date,home,hs,as,away])=>({date,home,hs,as,away}));
 
 const upcoming = [
@@ -249,7 +249,7 @@ const upcoming = [
   {date:"2026-11-08", time:"3:30 PM", opp:"Castroville United", venue:"Lions Park, Field 1"},
 ];
 
-// Pre-ECNL (FC Westlake Elite Central White) league games, from GotSport as of Oct 19 2026.
+// Pre-ECNL (FC Westlake Elite Central White) league games, from GotSport as of Oct 20 2026.
 // Keep in sync with elite-white/index.html. Their rained-out game vs FC Westlake North has no date yet; add it here once rescheduled.
 const preEcnl = [
   {date:"2026-10-17", time:"11:00 AM"},
@@ -371,7 +371,7 @@ document.getElementById("scouting").innerHTML = upcoming.map((u,i)=>{
 document.querySelectorAll("a.jump").forEach(a=>a.addEventListener("click",()=>{
   const d=document.querySelector(a.getAttribute("href")); if(d) d.open=true; }));
 
-// League tiers (GotSport, Oct 19 2026). [team, W-L-D] in standings order.
+// League tiers (GotSport, Oct 20 2026). [team, W-L-D] in standings order.
 const tiers = {
   "WC-A": {conf:"STXCL Western Conference", name:"Girls U12 Bracket A", tier:"Tier 1 of 3", teams:[
     ["Lonestar SAT Red","7-0-1"],["Lonestar ATX Red NW A","5-0-1"],["Lonestar ATX Red STH","4-1-0"],["FC Westlake Elite North White","2-1-1"],
