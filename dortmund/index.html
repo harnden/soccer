@@ -176,7 +176,7 @@ tr.up.fv-o td:first-child{box-shadow:inset 4px 0 0 rgba(232,116,42,.8)}tr.up.fv-
 <main>
   <header class="band">
     <h1>FC Westlake GU11 Dortmund</h1>
-    <p class="sub">CTX Premier League, Fall 2026. GU11 CTX I, Bracket B (Premier I). Results from PlayMetrics as of Oct 26, 2026.</p>
+    <p class="sub">CTX Premier League, Fall 2026. GU11 CTX I, Bracket B (Premier I). Results from PlayMetrics as of Nov 2, 2026.</p>
   </header>
   <div class="ladder" id="ladder"></div>
   <div class="record" id="record"></div>
@@ -212,7 +212,7 @@ const strip = s => s.replace(/\s*STXCL[- ]WC GU12.*$/,"").trim();
 const key = s => strip(s).toLowerCase();
 const same = (a,b) => key(a)===key(b);
 
-// Every GU11 CTX I Bracket B match played so far (PlayMetrics, as of Oct 26 2026). Scores home–away.
+// Every GU11 CTX I Bracket B match played so far (PlayMetrics, as of Nov 2 2026). Scores home–away.
 const results = [
   ["2026-09-12","DS Stars GU10 Maroon",0,3,"LTFC U11G White"],
   ["2026-09-12","FC Westlake GU11 Liverpool",5,3,"GalaxySC CTXPL GU10 Black"],
@@ -245,6 +245,10 @@ const results = [
   ["2026-10-25","Lonestar ATX GU11 Rattlers NTH",2,1,"TC Academy GU11 Blue"],
   ["2026-10-25","FC Westlake GU11 Dortmund",3,3,"FC Westlake GU11 Liverpool"],
   ["2026-10-25","DS Stars GU11 Silver",3,1,"GalaxySC CTXPL GU10 Black"],
+  ["2026-10-25","Pflugerville FC GU11 Blue",2,0,"LTFC U11G White"],
+  ["2026-11-01","TC Academy GU11 Blue",1,2,"Pflugerville FC GU11 Blue"],
+  ["2026-11-01","LTFC U11G White",1,1,"LTFC GU10 Premier II"],
+  ["2026-11-01","Lonestar ATX GU11 Rattlers NTH",0,4,"FC Westlake GU11 Dortmund"],
 ].map(([date,home,hs,as,away])=>({date,home,hs,as,away}));
 
 // Scrimmages: ours first. Kept out of league standings, matchup colors and scouting.
@@ -255,7 +259,6 @@ const scrimmages = [
 // kit: away = all navy (bring white/gold); home = white/gold (bring navy)
 const AWAY_KIT="All navy, bring white/gold", HOME_KIT="White/gold, bring navy";
 const upcoming = [
-  {date:"2026-11-01", time:"5:00 PM", opp:"Lonestar ATX GU11 Rattlers NTH", venue:"Westcreek, Field 3 East", kit:AWAY_KIT, status:"Rescheduled"},
   {date:"2026-11-08", time:"10:30 AM", opp:"DS Stars GU10 Maroon", venue:"DSYSA Sports & Rec Park 12-2", kit:AWAY_KIT, status:"Rescheduled"},
 ];
 const bracket = [
@@ -365,12 +368,12 @@ document.getElementById("scouting").innerHTML = upcoming.map((u,i)=>{
 document.querySelectorAll("a.jump").forEach(a=>a.addEventListener("click",()=>{
   const d=document.querySelector(a.getAttribute("href")); if(d) d.open=true; }));
 
-// CTX Premier League I, GU11 girls: two parallel brackets (PlayMetrics, Oct 26 2026).
+// CTX Premier League I, GU11 girls: two parallel brackets (PlayMetrics, Nov 2 2026).
 const tiers = {
   "CTX-A": {conf:"CTX Premier League I", name:"GU11 Bracket A", tier:"Premier I", teams:[
-    ["LTFC GU11 Red","6-1-0"],["Force FC GU11 Blue","5-1-1"],["FC Westlake GU11 Blue","5-2-0"],["Cap City GU11 Sky South","5-2-0"],
-    ["Lonestar ATX GU11 White STH","3-2-1"],["FC Westlake GU11 Arsenal","3-4-1"],["Lonestar ATX GU11 Eagles NTH","1-6-1"],
-    ["FC Westlake GU11 Boca Juniors","1-6-1"],["TC Premier SC GU11 Blue","0-5-1"]]},
+    ["LTFC GU11 Red","6-2-0"],["FC Westlake GU11 Blue","6-2-0"],["Force FC GU11 Blue","5-1-1"],["Cap City GU11 Sky South","5-2-0"],
+    ["FC Westlake GU11 Arsenal","4-4-1"],["Lonestar ATX GU11 White STH","3-2-1"],["Lonestar ATX GU11 Eagles NTH","1-6-1"],
+    ["FC Westlake GU11 Boca Juniors","1-6-1"],["TC Premier SC GU11 Blue","0-6-1"]]},
   "CTX-B": {conf:"CTX Premier League I", name:"GU11 Bracket B", tier:"Premier I", teams:null}, // filled from live table
 };
 tiers["CTX-B"].teams = table.map(r=>[strip(r.team), `${r.w}-${r.l}-${r.d}`]);
